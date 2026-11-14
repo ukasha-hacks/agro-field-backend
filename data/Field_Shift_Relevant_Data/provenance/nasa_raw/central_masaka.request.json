@@ -1,0 +1,75 @@
+{
+  "source_resource": "NASA POWER; GPM & IMERG",
+  "point": {
+    "sample_id": "central_masaka",
+    "region": "Central",
+    "sample_name": "Masaka vicinity",
+    "latitude": -0.337,
+    "longitude": 31.737
+  },
+  "request_url": "https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M%2CT2M_MIN%2CT2M_MAX%2CIMERG_PRECTOT%2CGWETTOP%2CGWETROOT%2CRH2M%2CWS2M%2CALLSKY_SFC_SW_DWN&community=AG&latitude=-0.337&longitude=31.737&start=20160101&end=20251231&format=JSON&time-standard=UTC",
+  "retrieved_at_utc": "2026-11-14T15:55:20.466750+00:00",
+  "header": {
+    "title": "NASA/POWER Source Native Resolution Daily Data",
+    "api": {
+      "version": "v2.10.3",
+      "name": "POWER Daily API"
+    },
+    "sources": [
+      "MERRA2",
+      "SYN1DEG",
+      "IMERG",
+      "POWER"
+    ],
+    "fill_value": -999.0,
+    "time_standard": "UTC",
+    "start": "20160101",
+    "end": "20251231"
+  },
+  "parameters": {
+    "T2M": {
+      "units": "C",
+      "longname": "Temperature at 2 Meters"
+    },
+    "T2M_MIN": {
+      "units": "C",
+      "longname": "Temperature at 2 Meters Minimum"
+    },
+    "T2M_MAX": {
+      "units": "C",
+      "longname": "Temperature at 2 Meters Maximum"
+    },
+    "IMERG_PRECTOT": {
+      "units": "mm/day",
+      "longname": "Total Precipitation"
+    },
+    "GWETTOP": {
+      "units": "1",
+      "longname": "Surface Soil Wetness"
+    },
+    "GWETROOT": {
+      "units": "1",
+      "longname": "Root Zone Soil Wetness"
+    },
+    "RH2M": {
+      "units": "%",
+      "longname": "Relative Humidity at 2 Meters"
+    },
+    "WS2M": {
+      "units": "m/s",
+      "longname": "Wind Speed at 2 Meters"
+    },
+    "ALLSKY_SFC_SW_DWN": {
+      "units": "MJ/m^2/day",
+      "longname": "All Sky Surface Shortwave Downward Irradiance"
+    }
+  },
+  "response_geometry": {
+    "type": "Point",
+    "coordinates": [
+      31.737,
+      -0.337,
+      1163.11
+    ]
+  }
+}

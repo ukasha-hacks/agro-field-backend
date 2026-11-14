@@ -1,0 +1,15 @@
+{
+  "workspaceCode" : "GAEZ-V4",
+  "mapsetCode" : "LR-SOI2",
+  "code" : "GAEZ-V4.LR-SOI2.SST.LOW",
+  "dimensionMembers" : [ {
+    "workspaceCode" : "GAEZ-V4",
+    "dimensionCode" : "VAR",
+    "code" : "SST"
+  }, {
+    "workspaceCode" : "GAEZ-V4",
+    "dimensionCode" : "INPUT",
+    "code" : "LOW"
+  } ],
+  "styleCode" : null
+}

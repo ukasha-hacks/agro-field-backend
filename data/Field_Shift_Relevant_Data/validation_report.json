@@ -1,0 +1,45 @@
+{
+  "checked_at_utc": "2026-11-14T15:58:20.562640+00:00",
+  "daily_rows": 14612,
+  "monthly_rows": 480,
+  "annual_rows": 40,
+  "seasonal_pattern_rows": 48,
+  "sample_points": 4,
+  "environmental_variables": 9,
+  "crop_reference_rows": 4,
+  "missing_daily_measurements": {},
+  "complete_months": 480,
+  "checks": [
+    "Full daily calendar per sample and variable",
+    "NASA-returned units",
+    "Temperature ordering",
+    "Nonnegative rainfall and wind",
+    "Wetness 0-1 and humidity 0-100",
+    "Monthly aggregation and valid day counts",
+    "Species identity and crop reference range ordering",
+    "All strict JSON exports disallow NaN"
+  ],
+  "limitations": [
+    "No district polygons",
+    "No farm observations",
+    "No rotation recommendations or forecasts computed"
+  ],
+  "independent_aggregation_max_abs_error": {
+    "rainfall_total_mm": 5.684341886080802e-14,
+    "temperature_mean_c": 4.8387096775570626e-05,
+    "temperature_minimum_c": 0.0,
+    "temperature_maximum_c": 0.0,
+    "surface_soil_wetness": 4.838709677423836e-05,
+    "root_zone_soil_wetness": 4.838709677423836e-05,
+    "relative_humidity_percent": 4.8387096782676053e-05,
+    "wind_speed_2m_m_s": 4.838709677468245e-05,
+    "solar_radiation_mj_m2_day": 4.8387096775570626e-05
+  },
+  "csv_json_agreement": true,
+  "map_points": 4,
+  "map_source_pixel_checks_passed": 4,
+  "raster_class_values_preserved": true,
+  "map_legend_from_official_metadata": true,
+  "previews_visually_reviewed": true,
+  "all_checks_passed": true
+}

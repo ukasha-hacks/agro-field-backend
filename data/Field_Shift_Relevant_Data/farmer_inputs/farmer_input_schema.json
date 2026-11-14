@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Farmer inputs, supplied by the farmer, not satellite downloads",
+  "type": "object",
+  "required": [
+    "farm_id",
+    "latitude",
+    "longitude",
+    "water_supply",
+    "main_priority",
+    "crop_history"
+  ],
+  "properties": {
+    "farm_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "latitude": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "longitude": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180
+    },
+    "water_supply": {
+      "enum": [
+        "rainfall_only",
+        "limited_irrigation",
+        "reliable_irrigation",
+        "unknown"
+      ]
+    },
+    "main_priority": {
+      "enum": [
+        "improve_soil",
+        "conserve_water",
+        "reduce_pests",
+        "income",
+        "other"
+      ]
+    },
+    "crop_history": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "crop_name"
+        ],
+        "properties": {
+          "crop_name": {
+            "type": "string"
+          },
+          "planting_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "harvest_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          }
+        }
+      }
+    },
+    "soil_ph": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 14
+    },
+    "organic_carbon_percent": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "soil_texture": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

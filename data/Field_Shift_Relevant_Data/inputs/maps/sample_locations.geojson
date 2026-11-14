@@ -1,0 +1,65 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.737,
+          -0.337
+        ]
+      },
+      "properties": {
+        "sample_id": "central_masaka",
+        "region": "Central",
+        "sample_name": "Masaka vicinity"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.175,
+          1.08
+        ]
+      },
+      "properties": {
+        "sample_id": "eastern_mbale",
+        "region": "Eastern",
+        "sample_name": "Mbale vicinity"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.299,
+          2.774
+        ]
+      },
+      "properties": {
+        "sample_id": "northern_gulu",
+        "region": "Northern",
+        "sample_name": "Gulu vicinity"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.655,
+          -0.607
+        ]
+      },
+      "properties": {
+        "sample_id": "western_mbarara",
+        "region": "Western",
+        "sample_name": "Mbarara vicinity"
+      }
+    }
+  ]
+}

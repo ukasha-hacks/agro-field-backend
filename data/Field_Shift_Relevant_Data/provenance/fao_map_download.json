@@ -1,0 +1,27 @@
+{
+  "source_resource": "FAO GAEZ",
+  "source_dataset_version": "v4",
+  "source_url": "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/LR/soi2/siLr_sst_mze.tif",
+  "catalogue_url": "https://data.fao.org/catalog/iso/fd3fc7ff-07d3-477a-a905-c46dbecc9dcc",
+  "retrieved_at_utc": "2026-11-14T15:59:26.920918+00:00",
+  "native_resolution_degrees": 0.008333333333333333,
+  "native_resolution_label": "30 arc-seconds, approximately 1 km at the equator",
+  "crop": "maize only",
+  "water_supply": "rain-fed",
+  "management": "low inputs",
+  "land_resource_baseline": "2010",
+  "actual_bbox_west_south_east_north": [
+    29.0,
+    -1.6000000000000032,
+    35.2,
+    4.299999999999997
+  ],
+  "width": 744,
+  "height": 708,
+  "crs": "EPSG:4326",
+  "native_values_preserved": true,
+  "sample_value_checks": 4,
+  "output_nodata": -9,
+  "license_from_catalogue": "CC-BY-NC-SA-4.0",
+  "important_limit": "This maize soil/terrain layer excludes a full present-day climate or rotation assessment. It is not pH, nitrogen, organic carbon or a measured soil-health score."
+}

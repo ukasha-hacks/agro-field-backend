@@ -1,0 +1,153 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.737,
+          -0.337
+        ]
+      },
+      "properties": {
+        "sample_id": "central_masaka",
+        "region": "Central",
+        "sample_name": "Masaka vicinity",
+        "month": "2025-12",
+        "expected_days": 31,
+        "temperature_mean_c": 24.0387,
+        "temperature_mean_c_valid_days": 31,
+        "temperature_minimum_c": 19.2,
+        "temperature_minimum_c_valid_days": 31,
+        "temperature_maximum_c": 28.27,
+        "temperature_maximum_c_valid_days": 31,
+        "rainfall_total_mm": 157.39,
+        "rainfall_total_mm_valid_days": 31,
+        "surface_soil_wetness": 0.4603,
+        "surface_soil_wetness_valid_days": 31,
+        "root_zone_soil_wetness": 0.4703,
+        "root_zone_soil_wetness_valid_days": 31,
+        "relative_humidity_percent": 65.8006,
+        "relative_humidity_percent_valid_days": 31,
+        "wind_speed_2m_m_s": 1.9477,
+        "wind_speed_2m_m_s_valid_days": 31,
+        "solar_radiation_mj_m2_day": 15.3774,
+        "solar_radiation_mj_m2_day_valid_days": 31,
+        "complete_data": true,
+        "data_status": "historical gridded point sample; not a region average"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.175,
+          1.08
+        ]
+      },
+      "properties": {
+        "sample_id": "eastern_mbale",
+        "region": "Eastern",
+        "sample_name": "Mbale vicinity",
+        "month": "2025-12",
+        "expected_days": 31,
+        "temperature_mean_c": 18.3623,
+        "temperature_mean_c_valid_days": 31,
+        "temperature_minimum_c": 11.86,
+        "temperature_minimum_c_valid_days": 31,
+        "temperature_maximum_c": 25.66,
+        "temperature_maximum_c_valid_days": 31,
+        "rainfall_total_mm": 109.28,
+        "rainfall_total_mm_valid_days": 31,
+        "surface_soil_wetness": 0.7084,
+        "surface_soil_wetness_valid_days": 31,
+        "root_zone_soil_wetness": 0.6829,
+        "root_zone_soil_wetness_valid_days": 31,
+        "relative_humidity_percent": 74.339,
+        "relative_humidity_percent_valid_days": 31,
+        "wind_speed_2m_m_s": 2.011,
+        "wind_speed_2m_m_s_valid_days": 31,
+        "solar_radiation_mj_m2_day": 20.3158,
+        "solar_radiation_mj_m2_day_valid_days": 31,
+        "complete_data": true,
+        "data_status": "historical gridded point sample; not a region average"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.299,
+          2.774
+        ]
+      },
+      "properties": {
+        "sample_id": "northern_gulu",
+        "region": "Northern",
+        "sample_name": "Gulu vicinity",
+        "month": "2025-12",
+        "expected_days": 31,
+        "temperature_mean_c": 27.3161,
+        "temperature_mean_c_valid_days": 31,
+        "temperature_minimum_c": 18.35,
+        "temperature_minimum_c_valid_days": 31,
+        "temperature_maximum_c": 36.83,
+        "temperature_maximum_c_valid_days": 31,
+        "rainfall_total_mm": 27.28,
+        "rainfall_total_mm_valid_days": 31,
+        "surface_soil_wetness": 0.3503,
+        "surface_soil_wetness_valid_days": 31,
+        "root_zone_soil_wetness": 0.3852,
+        "root_zone_soil_wetness_valid_days": 31,
+        "relative_humidity_percent": 48.8242,
+        "relative_humidity_percent_valid_days": 31,
+        "wind_speed_2m_m_s": 2.4497,
+        "wind_speed_2m_m_s_valid_days": 31,
+        "solar_radiation_mj_m2_day": 19.7077,
+        "solar_radiation_mj_m2_day_valid_days": 31,
+        "complete_data": true,
+        "data_status": "historical gridded point sample; not a region average"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.655,
+          -0.607
+        ]
+      },
+      "properties": {
+        "sample_id": "western_mbarara",
+        "region": "Western",
+        "sample_name": "Mbarara vicinity",
+        "month": "2025-12",
+        "expected_days": 31,
+        "temperature_mean_c": 21.2939,
+        "temperature_mean_c_valid_days": 31,
+        "temperature_minimum_c": 14.65,
+        "temperature_minimum_c_valid_days": 31,
+        "temperature_maximum_c": 29.39,
+        "temperature_maximum_c_valid_days": 31,
+        "rainfall_total_mm": 115.68,
+        "rainfall_total_mm_valid_days": 31,
+        "surface_soil_wetness": 0.4735,
+        "surface_soil_wetness_valid_days": 31,
+        "root_zone_soil_wetness": 0.4542,
+        "root_zone_soil_wetness_valid_days": 31,
+        "relative_humidity_percent": 70.9639,
+        "relative_humidity_percent_valid_days": 31,
+        "wind_speed_2m_m_s": 1.5013,
+        "wind_speed_2m_m_s_valid_days": 31,
+        "solar_radiation_mj_m2_day": 15.8045,
+        "solar_radiation_mj_m2_day_valid_days": 31,
+        "complete_data": true,
+        "data_status": "historical gridded point sample; not a region average"
+      }
+    }
+  ]
+}

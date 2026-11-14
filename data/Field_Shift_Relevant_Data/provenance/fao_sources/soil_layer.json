@@ -1,0 +1,78 @@
+{
+  "workspaceCode" : "GAEZ-V4",
+  "code" : "LR-SOI2",
+  "caption" : "Land and Water Resources - Soil suitability - Soil and terrain suitability, rain-fed, inputs",
+  "description" : "Land and Water Resources - Soil suitability - Soil and terrain suitability, rain-fed, high and low inputs",
+  "dimensions" : [ {
+    "workspaceCode" : "GAEZ-V4",
+    "code" : "VAR",
+    "type" : "WHAT"
+  }, {
+    "workspaceCode" : "GAEZ-V4",
+    "code" : "INPUT",
+    "type" : "WHAT"
+  } ],
+  "defaultStyleCode" : "SI10",
+  "measureCaption" : "Soil and terrain suitability, rain-fed, high and low inputs",
+  "measureUnit" : "class",
+  "scale" : 1.0,
+  "offset" : 0.0,
+  "additionalInfo" : null,
+  "tags" : [ "SOI2" ],
+  "width" : 43200,
+  "height" : 21600,
+  "affineTransform" : [ -180.0, 0.008333333333333333, 0.0, 90.0, 0.0, -0.008333333333333333 ],
+  "srs" : {
+    "proj4" : "+proj=longlat +datum=WGS84 +no_defs",
+    "epsg" : "4326"
+  },
+  "extent" : {
+    "srs" : [ -180.0, -90.0, 180.0, 90.0 ],
+    "wgs84" : [ -180.0, -90.0, 180.0, 90.0 ]
+  },
+  "dataType" : "Byte",
+  "noDataValue" : -9.0,
+  "flags" : null,
+  "classes" : {
+    "0.0" : {
+      "caption" : "0",
+      "description" : "0"
+    },
+    "1.0" : {
+      "caption" : "SI > 85 : Very high",
+      "description" : "SI > 85 : Very high"
+    },
+    "2.0" : {
+      "caption" : "70<SI<85 : High     ",
+      "description" : "70<SI<85 : High     "
+    },
+    "3.0" : {
+      "caption" : "55<SI<70 : Good",
+      "description" : "55<SI<70 : Good"
+    },
+    "4.0" : {
+      "caption" : "40<SI<55 : Medium  ",
+      "description" : "40<SI<55 : Medium  "
+    },
+    "5.0" : {
+      "caption" : "25<SI<40 : Moderate",
+      "description" : "25<SI<40 : Moderate"
+    },
+    "6.0" : {
+      "caption" : "10<SI<25 : Marginal     ",
+      "description" : "10<SI<25 : Marginal     "
+    },
+    "7.0" : {
+      "caption" : "0<SI<10 : Very marginal",
+      "description" : "0<SI<10 : Very marginal"
+    },
+    "8.0" : {
+      "caption" : "Not suitable",
+      "description" : "Not suitable"
+    },
+    "9.0" : {
+      "caption" : "Water",
+      "description" : "Water"
+    }
+  }
+}

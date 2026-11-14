@@ -1,0 +1,11 @@
+class_code,source_label,red,green,blue,alpha
+0,0,255,255,255,255
+1,SI > 85 : Very high,0,112,0,255
+2,70<SI<85 : High,21,174,17,255
+3,55<SI<70 : Good,172,225,94,255
+4,40<SI<55 : Medium,254,216,1,255
+5,25<SI<40 : Moderate,206,157,83,255
+6,10<SI<25 : Marginal,233,122,1,255
+7,0<SI<10 : Very marginal,164,164,164,255
+8,Not suitable,228,228,228,255
+9,Water,32,32,255,255

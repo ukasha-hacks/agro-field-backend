@@ -1,0 +1,25 @@
+listed_resource,role,download_status,reason_or_included_data
+SMAP,Optional expansion,Not downloaded,Separate soil-moisture mission observations can be added later; MERRA-2 wetness in this pack must not be labelled SMAP.
+GPM & IMERG,Included through NASA POWER,Downloaded,Daily IMERG_PRECTOT point series; separate GPM image archives are not included.
+Landsat / MODIS / VIIRS,Optional expansion,Not downloaded,"Use later for NDVI, vegetation stress, ground cover and bare-field periods; those outputs cannot be supplied by this pack."
+NASA POWER,Core input,Downloaded,"Nine historical environmental variables at four prototype points, 2016-2025."
+SRTM,Optional expansion,Not downloaded,"Use later if slope, runoff or terrain analysis is required."
+ECOSTRESS,Optional expansion,Not downloaded,Use later for land-surface temperature and evapotranspiration; this pack does not claim field ET.
+USDA Ag Data Commons,Optional research,Not downloaded,No specific relevant Uganda research dataset selected; do not assume the catalogue provides local farmer observations.
+Web Soil Survey,U.S. geographic scope,Not selected for Uganda,The supplied resource list describes U.S. soils; no Uganda soil survey substituted.
+Cropland Data Layer / CropScape,U.S. geographic scope,Not selected for Uganda,The supplied resource list describes U.S. crop classifications.
+PRISM,U.S. geographic scope,Not selected for Uganda,The supplied resource list describes U.S. climate datasets.
+SSURGO / STATSGO2,U.S. geographic scope,Not selected for Uganda,No Uganda local soil properties supplied by these U.S. soil databases.
+NAIP,U.S. geographic scope,Not selected for Uganda,The supplied resource list describes U.S. aerial imagery.
+NLCD,Optional land cover,Not downloaded,No Uganda product selected; no land-cover conclusions computed.
+NLDAS / GLDAS,Optional expansion,Not downloaded,GLDAS offers a global route if further modelled hydrological variables become necessary; no separate assimilation archive included.
+FAO GAEZ,Core agricultural reference,Downloaded and extracted,Four ECOCROP species data sheets accessed via GAEZ; maize soil/terrain low-input rain-fed reference map and official class metadata.
+CoCoRaHS,North American geographic scope,Not selected for Uganda,The supplied resource list describes North American crowd-sourced observations.
+USGS NWIS,Optional hydrology,Not downloaded,No relevant Uganda station records selected; irrigation supply remains a farmer input.
+USDA AMS Market News,Optional market context,Not downloaded,No verified Ugandan farm-gate price dataset selected; local prices and market access remain local inputs.
+USDA NASS QuickStats,U.S. agricultural statistics,Not selected for Uganda,County/state statistics cannot be treated as Uganda farm yields.
+OpenET,Western U.S. geographic scope in supplied list,Not selected for Uganda,No Uganda ET data obtained from this entry.
+LANDFIRE,U.S. geographic scope,Not selected for Uganda,The supplied resource list describes U.S. vegetation and fuel layers.
+GEDI,Optional landscape context,Not downloaded,Forest structure is not a direct crop-rotation or crop-yield measurement.
+Sentinel-2,Optional expansion,Not downloaded,Use later for finer vegetation/ground-cover mapping if needed.
+ERA5,Optional expansion,Not downloaded,No second climate reanalysis needed for the initial dashboard; all included meteorology is from the listed NASA POWER route.
