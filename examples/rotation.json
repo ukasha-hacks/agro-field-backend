@@ -1,0 +1,24 @@
+{
+  "exploration": {
+    "location_id": "northern_gulu",
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-31",
+    "categories": ["rainfall", "temperature", "soil_wetness"],
+    "interval": "monthly"
+  },
+  "crop_history": [
+    {"season_label": "Previous season", "crops": ["maize"]},
+    {"season_label": "Current season", "crops": ["maize"]}
+  ],
+  "baseline_sequence": [
+    {"season": 1, "crops": ["maize"]},
+    {"season": 2, "crops": ["maize"]},
+    {"season": 3, "crops": ["maize"]}
+  ],
+  "water_supply": "rainfall_only",
+  "priority": "improve_soil",
+  "excluded_crops": [],
+  "preferred_crops": [],
+  "soil": {"ph": null, "texture": null, "organic_carbon_percent": null},
+  "repeats": false
+}

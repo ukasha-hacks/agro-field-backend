@@ -209,8 +209,3 @@ class Metadata(Model):
     warnings: list[Warning]
     data_version: str
     methods_version: str
-
-
-class ExportRequest(Model):
-    exploration: ExploreRequest
-    rotation: None = None

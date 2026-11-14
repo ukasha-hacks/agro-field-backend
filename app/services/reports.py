@@ -18,7 +18,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import mm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import Image, KeepTogether, LongTable, Paragraph, SimpleDocTemplate, Spacer, TableStyle
+from reportlab.platypus import Image, KeepTogether, LongTable, PageBreak, Paragraph, SimpleDocTemplate, Spacer, TableStyle
 
 from app.data_store import MAP_PREVIEW, DataStore
 from app.schemas import ExploreResponse, Panel
@@ -146,11 +146,15 @@ def report_bytes(store: DataStore, result: ExploreResponse, rotation=None) -> by
         ))
     story.append(KeepTogether(map_items))
     if rotation is not None:
+        story.append(PageBreak())
         add_rotation(story, rotation, styles)
     story.append(paragraph("Limitations and sources", styles["Heading2"]))
     for warning in result.warnings:
         story.append(paragraph(warning.message, styles["BodyText"]))
-    for source in result.sources:
+    sources = {source.source_id: source for source in result.sources}
+    if rotation is not None:
+        sources.update({source.source_id: source for source in rotation.sources})
+    for source in sources.values():
         text = f"{source.name}. {source.period}. {source.url} {source.limitations}"
         story.append(paragraph(text, styles["BodyText"]))
     generated = datetime.now(ZoneInfo("Africa/Kampala")).isoformat(timespec="seconds")
@@ -164,5 +168,24 @@ def report_bytes(store: DataStore, result: ExploreResponse, rotation=None) -> by
 
 
 def add_rotation(story, rotation, styles):
-    # The comparison stage supplies this section once its contract is available.
-    raise NotImplementedError("Rotation reports are not available at this stage")
+    story.append(paragraph("Rotation comparison", styles["Heading2"]))
+    status = rotation.status.replace("_", " ")
+    priority = rotation.priority.replace("_", " ")
+    story.append(paragraph(f"Assessment status: {status}. Priority: {priority}.", styles["BodyText"]))
+    for strategy in [rotation.baseline, *rotation.alternatives]:
+        story.append(paragraph(strategy.strategy_id.replace("_", " ").title(), styles["Heading3"]))
+        sequence = [" + ".join(season.crops) or "Fallow" for season in strategy.sequence]
+        story.append(paragraph(" -> ".join(sequence), styles["BodyText"]))
+        rows = [["Criterion", "Result", "Explanation"]]
+        rows.extend([[item.criterion.replace("_", " "), item.status, item.reason] for item in strategy.checks])
+        story.append(table(rows, [PAGE_WIDTH * 0.26, PAGE_WIDTH * 0.13, PAGE_WIDTH * 0.61], styles))
+    for slot in rotation.unfilled_alternative_slots:
+        label = slot.strategy_id.replace("_", " ").title()
+        story.append(paragraph(f"{label}: {slot.reason}", styles["BodyText"]))
+    story.append(paragraph("Information still needed", styles["Heading3"]))
+    for missing in rotation.missing_information:
+        story.append(paragraph(missing, styles["BodyText"]))
+    for warning in rotation.warnings:
+        story.append(paragraph(warning.message, styles["BodyText"]))
+    versions = f"Assessment: {rotation.assessment_id}. Rules: {rotation.rules_version}."
+    story.append(paragraph(versions, styles["BodyText"]))
