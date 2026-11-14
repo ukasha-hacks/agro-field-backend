@@ -19,7 +19,7 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-The final branch, `stage/04-rotation-comparison`, contains all four cumulative stages: local data, historical exploration, PDF export, and evidence-aware rotation comparison. Earlier stages have been merged into main separately. To get the latest complete implementation:
+Stages 1-3 are available on main. The latest cumulative implementation is on [stage/04-rotation-comparison](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/04-rotation-comparison), containing local data, historical exploration, PDF export and evidence-aware rotation comparison, with 36 passing tests. Earlier stage branches remain available. To get the complete implementation:
 
 ```bash
 git clone --branch stage/04-rotation-comparison https://github.com/ukasha-hacks/agro-field-backend.git
@@ -27,6 +27,8 @@ cd agro-field-backend
 ```
 
 The rotation endpoint is implemented, but the supplied agricultural rule set is pending review. Its default result is **insufficient evidence**, not invented crop advice. See [rotation rules and current limits](docs/ROTATION_RULES.md).
+
+The [source guide](docs/DATA_SOURCES.md) records challenge-listed resources, local file provenance, reasons for use and limitations.
 
 ## Explore a location
 
