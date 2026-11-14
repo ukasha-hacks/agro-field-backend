@@ -19,7 +19,9 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-Stages 1-3 provide local data loading, historical exploration, calculated descriptions and PDF export. Rotation comparisons follow on the final branch. Metadata reports which features are currently implemented.
+Stages 1-3 are available on main. The latest cumulative implementation is on [stage/04-rotation-comparison](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/04-rotation-comparison), including evidence-aware comparisons, combined PDF reports and 36 passing tests. Read its [README](https://github.com/ukasha-hacks/agro-field-backend/blob/stage/04-rotation-comparison/README.md) for setup and endpoints.
+
+The default agricultural rule set is pending review, so rotation assessments explain insufficient evidence instead of inventing recommendations. The [source guide](https://github.com/ukasha-hacks/agro-field-backend/blob/stage/04-rotation-comparison/docs/DATA_SOURCES.md) records challenge-listed resources, local file provenance, reasons for use and limitations. Earlier stage branches remain available.
 
 ## Explore a location
 
