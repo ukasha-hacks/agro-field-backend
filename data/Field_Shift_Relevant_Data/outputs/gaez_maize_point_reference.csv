@@ -1,0 +1,5 @@
+sample_id,region,sample_name,longitude,latitude,gaez_maize_soil_terrain_class,gaez_maize_soil_terrain_label,baseline,input_level,water_supply,validation_status
+central_masaka,Central,Masaka vicinity,31.737,-0.337,3,55<SI<70 : Good,GAEZ v4 land resources baseline 2010,low,rainfed,modelled_reference_not_field_test
+eastern_mbale,Eastern,Mbale vicinity,34.175,1.08,5,25<SI<40 : Moderate,GAEZ v4 land resources baseline 2010,low,rainfed,modelled_reference_not_field_test
+northern_gulu,Northern,Gulu vicinity,32.299,2.774,4,40<SI<55 : Medium,GAEZ v4 land resources baseline 2010,low,rainfed,modelled_reference_not_field_test
+western_mbarara,Western,Mbarara vicinity,30.655,-0.607,5,25<SI<40 : Moderate,GAEZ v4 land resources baseline 2010,low,rainfed,modelled_reference_not_field_test

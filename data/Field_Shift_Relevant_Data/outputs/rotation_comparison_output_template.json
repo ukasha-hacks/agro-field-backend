@@ -1,0 +1,36 @@
+{
+  "status": "not_computed",
+  "reason": "Farmer inputs, local crop validation and documented rotation rules are required.",
+  "strategies": [
+    {
+      "strategy_id": "existing_rotation",
+      "crop_sequence": null,
+      "planting_windows": null,
+      "supporting_evidence": [],
+      "potential_benefits": null,
+      "tradeoffs": null,
+      "uncertainty": null,
+      "local_review_required": true
+    },
+    {
+      "strategy_id": "alternative_1",
+      "crop_sequence": null,
+      "planting_windows": null,
+      "supporting_evidence": [],
+      "potential_benefits": null,
+      "tradeoffs": null,
+      "uncertainty": null,
+      "local_review_required": true
+    },
+    {
+      "strategy_id": "alternative_2",
+      "crop_sequence": null,
+      "planting_windows": null,
+      "supporting_evidence": [],
+      "potential_benefits": null,
+      "tradeoffs": null,
+      "uncertainty": null,
+      "local_review_required": true
+    }
+  ]
+}
