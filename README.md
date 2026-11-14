@@ -19,7 +19,21 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-Stage 1 provides health, metadata, locations, point GeoJSON, crop references and the reference-map preview. Exploration, PDF exports and rotation comparisons are the following stages. Metadata reports which features are currently implemented.
+Stages 1-2 provide local data loading, catalog/map references, historical exploration and calculated descriptions. PDF exports and rotation comparisons follow on the next branches. Metadata reports which features are currently implemented.
+
+## Explore a location
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/explore \
+  -H 'Content-Type: application/json' \
+  --data-binary @examples/explore.json
+```
+
+Select a supported `location_id`, inclusive dates, unique categories (`rainfall`, `temperature`, `soil_wetness`), and `daily` or `monthly`. Daily views support up to 366 days. Monthly views support the entire 2016-2025 archive.
+
+The API returns aligned panel data, units, statistics, concise descriptions and point geometry. Monthly requests filter daily observations first, so a partial-month request never receives an entire month's rainfall. Missing observations stay null; real zero rainfall stays zero. Statistics use daily weighting. Monthly minimum/maximum temperatures are extremes, not averaged daily minima/maxima.
+
+The frontend can implement a year selector and month cursor from one response; no replay API or live data calls are needed. A source's grid resolution remains unchanged when zooming the map.
 
 ## Configuration
 
@@ -49,5 +63,7 @@ See [the implementation brief](docs/BACKEND_BRIEF.md) for the full contract and 
 ## Sources and credits
 
 Environmental series: NASA POWER, MERRA-2, GPM IMERG and SYN1DEG. Crop references: FAO GAEZ/ECOCROP. Maize map: FAO/IIASA GAEZ v4, with source catalogue terms recorded as CC-BY-NC-SA-4.0. Preserve the source records and attribution in the included dataset. No application license changes those dataset terms.
+
+See [DATA_SOURCES.md](docs/DATA_SOURCES.md) for the challenge resource link, direct provider references, why each input is used, and the GAEZ/ECOCROP relationship.
 
 AI assistance was used to implement and test this prototype. No agricultural review or field impact is claimed.
