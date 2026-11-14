@@ -59,7 +59,7 @@ def metadata(store: DataStore = Depends(get_store)):
             {"category": "temperature", "unit": "degC", "monthly_aggregation": "mean; minimum and maximum are extremes"},
             {"category": "soil_wetness", "unit": "dimensionless_index", "monthly_aggregation": "mean"},
         ],
-        features={"exploration": True, "pdf_export": False, "map_references": bool(store.map_layers),
+        features={"exploration": True, "pdf_export": True, "map_references": bool(store.map_layers),
                   "rotation_comparison": False, "reviewed_rotation_scoring": False},
         sources=SOURCES, warnings=store.warnings(), data_version=store.version, methods_version=METHODS_VERSION,
     )

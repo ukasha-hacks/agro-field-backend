@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import APP_VERSION, Settings
 from app.data_store import DataStore
 from app.errors import install_error_handlers
-from app.routers import analysis, catalog
+from app.routers import analysis, catalog, exports
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -26,6 +26,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     install_error_handlers(app)
     app.include_router(catalog.router)
     app.include_router(analysis.router)
+    app.include_router(exports.router)
     return app
 
 

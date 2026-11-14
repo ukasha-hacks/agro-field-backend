@@ -1,0 +1,10 @@
+{
+  "exploration": {
+    "location_id": "northern_gulu",
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-31",
+    "categories": ["rainfall", "temperature", "soil_wetness"],
+    "interval": "monthly"
+  },
+  "rotation": null
+}
