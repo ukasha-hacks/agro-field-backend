@@ -19,9 +19,16 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-Stages 1-3 are available on main. The latest cumulative implementation is on [stage/04-rotation-comparison](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/04-rotation-comparison), including evidence-aware comparisons, combined PDF reports and 36 passing tests. Read its [README](https://github.com/ukasha-hacks/agro-field-backend/blob/stage/04-rotation-comparison/README.md) for setup and endpoints.
+Stages 1-3 are available on main. The latest cumulative implementation is on [stage/04-rotation-comparison](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/04-rotation-comparison), containing local data, historical exploration, PDF export and evidence-aware rotation comparison, with 36 passing tests. Earlier stage branches remain available. To get the complete implementation:
 
-The default agricultural rule set is pending review, so rotation assessments explain insufficient evidence instead of inventing recommendations. The [source guide](https://github.com/ukasha-hacks/agro-field-backend/blob/stage/04-rotation-comparison/docs/DATA_SOURCES.md) records challenge-listed resources, local file provenance, reasons for use and limitations. Earlier stage branches remain available.
+```bash
+git clone --branch stage/04-rotation-comparison https://github.com/ukasha-hacks/agro-field-backend.git
+cd agro-field-backend
+```
+
+The rotation endpoint is implemented, but the supplied agricultural rule set is pending review. Its default result is **insufficient evidence**, not invented crop advice. See [rotation rules and current limits](docs/ROTATION_RULES.md).
+
+The [source guide](docs/DATA_SOURCES.md) records challenge-listed resources, local file provenance, reasons for use and limitations.
 
 ## Explore a location
 
@@ -51,6 +58,37 @@ The report recomputes through the same exploration service. It includes statisti
 The map preview labels all four locations; the report identifies the chosen location in text. It is not an animated weather map or a newly highlighted district. When the optional image is absent, export still works with coordinates and an explicit note.
 
 A generated [Gulu 2024 sample report](examples/gulu-2024-report.pdf) is included for review.
+
+## Compare rotations
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/rotation-comparisons \
+  -H 'Content-Type: application/json' \
+  --data-binary @examples/rotation.json
+```
+
+This separate workflow accepts crop history, a three-season baseline, water availability, priorities, exclusions/preferences and optional soil information. The baseline stays visible even when it has a failed or unknown check. Alternatives require supporting agricultural evidence. The endpoint explains unfilled comparison slots.
+
+For a combined PDF, send an export request with `exploration` and the full `rotation` request. Their exploration selections must match. The report retains provisional/insufficient-evidence labels and the missing-information list.
+
+Use [the combined request](examples/export-with-rotation.json) with the PDF endpoint above. A generated [combined Gulu report](examples/gulu-2024-comparison.pdf) is included.
+
+## Endpoints
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | /health | Local data readiness |
+| GET | /api/v1/metadata | Coverage, units and feature availability |
+| GET | /api/v1/locations | Four supported sample locations |
+| GET | /api/v1/locations.geojson | Point GeoJSON |
+| GET | /api/v1/crops | Species references and their limitations |
+| GET | /api/v1/map-layers | Reference map metadata and legend |
+| GET | /api/v1/map-layers/{layer_id}/preview | Whitelisted local PNG |
+| POST | /api/v1/explore | Filtered graph series, statistics and descriptions |
+| POST | /api/v1/rotation-comparisons | Evidence-aware rotation assessment |
+| POST | /api/v1/exports/pdf | Matching exploration/combined PDF |
+
+Errors use `error.code`, `error.message`, and `error.details`. Bad selections return 422, unknown IDs return 404, and insufficient agricultural evidence is a normal 200 response with an explicit assessment status.
 
 ## Configuration
 

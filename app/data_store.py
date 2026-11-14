@@ -49,10 +49,16 @@ class DataStore:
         self.end_date = self.daily["date"].max().date()
         self.locations = self._load_locations()
         self.crops = self._load_crops()
-        self.map_layers = self._load_map_layers()
+        try:
+            self.map_layers = self._load_map_layers()
+        except (OSError, ValueError, KeyError, TypeError):
+            # A broken optional map must not prevent access to the daily series.
+            self.map_layers = []
         self.version = self._fingerprint()
 
     def _validate_daily(self):
+        if self.daily.empty:
+            raise ValueError("Daily data contains no observations")
         required = {"sample_id", "date", "latitude", "longitude", *ENV_COLUMNS}
         missing = required - set(self.daily.columns)
         if missing:
