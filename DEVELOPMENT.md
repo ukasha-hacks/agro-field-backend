@@ -40,3 +40,9 @@ Validation: 70 backend tests pass, including all ten crop choices, original and 
 Paired with frontend stage/09-plan-input-checks. Unknown planned crops now return needs_input, the affected season numbers and no premature alternatives. Unknown past crops remain valid. Optional planned_days lets farmers check minimum crop duration without inventing dates. Supplied date pairs take priority; known overlaps fail even when another season has no dates. Fallow is recorded without pretending crop-reference coverage passed. Reviewed agronomic rules remain pending.
 
 Validation: 82 backend tests pass, including minimum-cycle boundaries, date precedence, partial calendar overlaps, incomplete plans, fallow, original source integrity and offline operation.
+
+## Stage 9: deployed frontend access
+
+The default CORS list now includes https://agrofields.vercel.app and local Next.js development on localhost or 127.0.0.1. Explicit CORS_ORIGINS values still replace the defaults, with surrounding spaces and trailing slashes removed. The README records both Vercel environment settings and connection checks. The existing GET/POST and Content-Type policy is retained.
+
+Validation: 88 backend tests pass. New checks cover real catalog responses, JSON submission preflight, other origins and configured-origin normalization. The matching frontend production smoke also passes against this backend, including historical graphs, rotation assessments and a combined PDF.
