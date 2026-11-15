@@ -2,6 +2,12 @@ from app.rotation_schemas import RotationConclusion
 
 
 def conclude(store, request, baseline, alternatives):
+    pending = [str(season.season) for season in request.baseline_sequence if "unknown" in season.crops]
+    if pending:
+        label = ("season " if len(pending) == 1 else "seasons ") + ", ".join(pending)
+        return RotationConclusion(title=f"Choose crops for {label}", tone="attention",
+            detail="A season is still marked Not sure. Choose its crop, or Fallow, before comparing this plan.",
+            next_steps=["Complete the missing crop choices."])
     failures = [item for item in baseline.checks if item.status == "fail"]
     crops = {crop for season in baseline.sequence for crop in season.crops}
     known = {crop.crop_id: crop for crop in store.crops}
@@ -11,8 +17,10 @@ def conclude(store, request, baseline, alternatives):
     gaps = [item for strategy in assessed for item in strategy.checks if item.gap_type == "farmer_input"]
     if any(item.criterion.endswith("soil_ph") for item in gaps):
         steps.append("Add a measured soil pH to check your field.")
-    if any(item.criterion == "calendar_overlap" or item.criterion.endswith("minimum_cycle_days") for item in gaps):
-        steps.append("Add planting and harvest dates to finish the timing checks.")
+    if any(item.criterion.endswith("minimum_cycle_days") for item in gaps):
+        steps.append("Add available growing days or planting and harvest dates to check crop duration.")
+    elif any(item.criterion == "calendar_overlap" for item in gaps):
+        steps.append("Add calendar dates if you also want to check season overlap.")
     if failures:
         return RotationConclusion(title="Your starting plan needs a change", detail=failures[0].reason,
             tone="attention", next_steps=steps[:2])
@@ -40,8 +48,8 @@ def conclude(store, request, baseline, alternatives):
         return RotationConclusion(title="An option to explore", tone="review",
             detail=f"{sequence}. It passes the available broad-range checks; crop order and seasonal water needs still need review.",
             next_steps=steps[:2])
-    if crops <= {"unknown"} or not crops:
-        return RotationConclusion(title="Add your starting crops", detail="Choose at least one known crop to explore a different plan.",
-            tone="review", next_steps=["Edit your next seasons."])
+    if not crops:
+        return RotationConclusion(title="Your fallow plan is recorded", detail="The local files do not assess the effects of a fallow-based rotation.",
+            tone="review", next_steps=[])
     return RotationConclusion(title="No alternative passed the available checks", tone="review",
         detail="Review crop exclusions, pH and planned dates before changing this plan.", next_steps=steps[:2])

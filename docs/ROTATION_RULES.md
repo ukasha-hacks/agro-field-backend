@@ -17,7 +17,7 @@ All thresholds come directly from those existing crop records. The original down
 | Check | Calculation | Missing or conflicting evidence |
 | --- | --- | --- |
 | Soil pH | absolute minimum <= farmer pH <= absolute maximum | Missing pH is unknown; outside the broad range flags a reference conflict |
-| Minimum crop cycle | inclusive days = harvest - planting + 1; compare with the saved minimum | Missing dates are unknown; any period shorter than the minimum fails this check |
+| Minimum crop cycle | use harvest - planting + 1 when both dates exist; otherwise use supplied planned_days; compare with the saved minimum | Missing dates and duration are unknown; any period shorter than the minimum fails this check |
 | Historical mean temperature | mean of all selected daily mean temperatures; compare with the saved absolute range | Any missing day leaves the mean unknown; a mean outside the range needs review, rather than proving the crop unsuitable |
 | Calendar | each later planting date must follow the previous harvest date | Missing dates are unknown; overlap fails |
 | Farmer exclusions | no excluded crop in the sequence | An excluded crop fails |
@@ -27,13 +27,13 @@ The historical temperature check passes only a comparison of a past-period mean 
 ## How options are selected
 
 1. Keep the farmer's starting plan and all its checks, including mixtures, fallow, unknowns and unsupported crops.
-2. Enumerate three single-crop seasons from the four referenced crops after exclusions. Do not invent crops or planting dates.
+2. Enumerate three single-crop seasons from the five seasonal candidate crops after exclusions. Do not invent crops or planting dates.
 3. Remove candidates with any failed declared check. At least one positive sourced range check is required; mere enumeration does not qualify a candidate.
 4. In reference-only mode, sort by the number of distinct preferred crops, then the number of distinct crops, then keeping the starting crop first, then crop IDs for reproducibility. This is a transparent display heuristic, not a scientifically validated rotation rule.
 5. Show up to two different crop combinations, each containing at least two species. Different permutations of the same crop set do not fill two cards. A repeated crop is not universally banned; no unsourced crop-break interval is introduced.
 6. Label the result `reference_only`, with unknown feasibility and local review required. Explain passed checks, tradeoffs and all unresolved information.
 
-This mode needs at least one named, referenced starting crop and a reference for every named starting crop. An unknown season can remain alongside known crops. Perennial references can pass species checks but cannot unlock annual replacement sequences. A fully unknown plan or an unreferenced system receives `insufficient_evidence`, not an automatic replacement with annual crops. Mixed referenced crops can explore single-crop ideas, but this does not validate the mixture or advise removing it.
+This mode needs at least one named, referenced starting crop and a reference for every named starting crop. A planned season marked unknown returns needs_input and a named-season prompt before candidates are generated. Unknown crop history remains acceptable. Perennial references can pass species checks but cannot unlock annual replacement sequences. A fully unknown plan receives `needs_input`; an unreferenced system receives `insufficient_evidence`, not an automatic replacement with annual crops. Mixed referenced crops can explore single-crop ideas, but this does not validate the mixture or advise removing it.
 
 If too few crop combinations remain, show fewer options and explain the empty slots. No yield, income, water saving, soil benefit, confidence percentage or agronomic ranking is calculated. Water supply and priority identify missing evidence; they do not silently alter temperature observations.
 

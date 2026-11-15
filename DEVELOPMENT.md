@@ -1,6 +1,6 @@
 # Development stages
 
-Each stage is a cumulative branch so the last stage contains the earlier work. Use stage/06-local-rules for the current backend and stage/07-local-options for its matching frontend. Stage branches retain the earlier implementation.
+Each stage is a cumulative branch so the last stage contains the earlier work. Use main for the current backend and matching frontend. Stage branches retain the earlier implementation.
 
 | Branch | Scope | Status |
 | --- | --- | --- |
@@ -34,3 +34,9 @@ Validation: 53 backend tests pass, covering boundary pH, dates, mixtures, unsupp
 Added six FAO crop sheets, explicit perennial handling, and four HWSD v2.0 topsoil pH estimates from FAO-linked archives. Original source files are unchanged. Corrected whole-sequence reference coverage and separated unvalidated succession evidence. Added explicit gap types and a concise shared conclusion for the API, frontend and PDF. A measured pH takes priority; estimates can be disabled and never become farm measurements. Paired frontend: stage/08-clear-rotation-answer.
 
 Validation: 70 backend tests pass, including all ten crop choices, original and new source integrity, soil-row provenance, measured-pH precedence, estimate opt-out, missing data, cotton duration, actual date checks, perennial safety and offline requests.
+
+## Stage 8: complete plan inputs
+
+Paired with frontend stage/09-plan-input-checks. Unknown planned crops now return needs_input, the affected season numbers and no premature alternatives. Unknown past crops remain valid. Optional planned_days lets farmers check minimum crop duration without inventing dates. Supplied date pairs take priority; known overlaps fail even when another season has no dates. Fallow is recorded without pretending crop-reference coverage passed. Reviewed agronomic rules remain pending.
+
+Validation: 82 backend tests pass, including minimum-cycle boundaries, date precedence, partial calendar overlaps, incomplete plans, fallow, original source integrity and offline operation.

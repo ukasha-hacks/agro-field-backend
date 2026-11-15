@@ -19,10 +19,10 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-The latest cumulative implementation is on [stage/07-complete-reference-checks](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/07-complete-reference-checks), containing local data, historical exploration, reference-based rotation options and DM Sans PDF reports. Use it with frontend `stage/08-clear-rotation-answer`. Earlier stage branches remain available. To get the complete implementation:
+Use `main` in both repositories for the current matching implementation. Tested stage branches remain available. The backend includes local data, historical exploration, reference-based rotation checks and DM Sans PDF reports. To get the complete implementation:
 
 ```bash
-git clone --branch stage/07-complete-reference-checks https://github.com/ukasha-hacks/agro-field-backend.git
+git clone --branch main https://github.com/ukasha-hacks/agro-field-backend.git
 cd agro-field-backend
 ```
 
@@ -69,7 +69,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/rotation-comparisons \
   --data-binary @examples/rotation.json
 ```
 
-This separate workflow accepts crop history, a three-season baseline, water availability, priorities, exclusions/preferences and optional soil information. The baseline stays visible even when it has a failed or unknown check. Reference-based alternatives use saved pH, minimum crop-cycle and historical-temperature checks. They remain unvalidated for crop succession, seasonal water needs and priority outcomes. The endpoint explains unfilled comparison slots.
+This separate workflow accepts crop history, a three-season baseline, water availability, priorities, exclusions/preferences and optional soil information. The baseline stays visible even when it has a failed or unknown check. Reference-based alternatives use saved pH, minimum crop-cycle and historical-temperature checks. They remain unvalidated for crop succession, seasonal water needs and priority outcomes. The endpoint explains unfilled comparison slots. A planned season marked Not sure returns `needs_input` and a direct crop-choice prompt before alternatives are considered. Optional `planned_days` checks the saved minimum cycle; exact planting/harvest dates take priority when both are supplied.
 
 For a combined PDF, send an export request with `exploration` and the full `rotation` request. Their exploration selections must match. The report retains reference-only/provisional/insufficient-evidence labels and the missing-information list.
 

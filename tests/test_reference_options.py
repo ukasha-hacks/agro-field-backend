@@ -47,7 +47,7 @@ def test_supported_mixture_can_explore_but_is_not_declared_valid(client):
     body = rotation_body()
     body["baseline_sequence"][0]["crops"] = ["groundnut", "beans"]
     body["baseline_sequence"][1]["crops"] = ["beans", "groundnut"]
-    body["baseline_sequence"][2]["crops"] = ["unknown"]
+    body["baseline_sequence"][2]["crops"] = ["maize"]
     result = compare(client, body)
     assert result.status == "reference_only" and len(result.alternatives) == 2
     assert result.baseline.sequence[0].crops == ["groundnut", "beans"]
@@ -55,7 +55,7 @@ def test_supported_mixture_can_explore_but_is_not_declared_valid(client):
     assert all(any("not advice to replace" in text for text in option.tradeoffs) for option in result.alternatives)
 
 
-@pytest.mark.parametrize("crop", ["coffee", "unreferenced-banana", "cassava", "unknown"])
+@pytest.mark.parametrize("crop", ["coffee", "unreferenced-banana", "cassava"])
 def test_unreferenced_or_entirely_unknown_systems_are_not_replaced(client, crop):
     body = rotation_body()
     for season in body["baseline_sequence"]:

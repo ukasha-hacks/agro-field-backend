@@ -86,16 +86,27 @@ def assess_strategy(store, request, sequence, strategy_id, rules, mean_temperatu
         reference_reason = f"No local species reference for: {', '.join(sorted(unsupported - {'unknown'}))}."
         if unsupported == {"unknown"}:
             reference_reason = "Choose a crop for each season marked Not sure."
-    checks.append(check("crop_reference_coverage", reference_status, reference_reason))
+    item = check("crop_reference_coverage", reference_status, reference_reason)
+    if unsupported == {"unknown"}:
+        item.gap_type = "farmer_input"
+    if not crops:
+        item.status = "unknown"
+        item.reason = "The recorded plan is fallow, so crop-reference checks do not apply."
+        item.gap_type = "local_review"
+    checks.append(item)
     if any(len(season.crops) != 1 for season in sequence):
         checks.append(check("cropping_system", "unknown", "Automatic rules currently cover single-crop seasons, not mixtures or fallow."))
     dates_known = all(season.planting_date and season.harvest_date for season in sequence)
     calendar_status = "unknown"
     calendar_reason = "Planting and harvest dates are needed to check season overlap."
-    if dates_known:
-        overlaps = any(sequence[i].planting_date <= sequence[i - 1].harvest_date for i in range(1, 3))
-        calendar_status = "fail" if overlaps else "pass"
-        calendar_reason = "Planned seasons overlap." if overlaps else "The supplied season dates do not overlap."
+    overlaps = any(sequence[i].planting_date and sequence[i - 1].harvest_date and
+                   sequence[i].planting_date <= sequence[i - 1].harvest_date for i in range(1, 3))
+    if overlaps:
+        calendar_status = "fail"
+        calendar_reason = "Planned seasons overlap."
+    elif dates_known:
+        calendar_status = "pass"
+        calendar_reason = "The supplied season dates do not overlap."
     checks.append(check("calendar_overlap", calendar_status, calendar_reason))
     checks.append(check("growing_window_suitability", "unknown",
                         "Local maturity periods and season-specific climate/water rules are not supplied; historical context is descriptive."))
@@ -108,11 +119,20 @@ def assess_strategy(store, request, sequence, strategy_id, rules, mean_temperatu
         missing = crops - covered
         covered_status = "unknown" if missing or not crops else "pass"
         reason = "Local reference checks cover every crop in the sequence. This does not validate crop order."
-        if missing or not crops:
-            reason = f"Reference checks cannot cover: {', '.join(sorted(missing)) or 'an empty crop sequence'}."
+        if missing == {"unknown"}:
+            reason = "Choose the crop for each season marked Not sure to finish reference coverage."
+        elif missing:
+            reason = f"No reference checks are available for: {', '.join(sorted(missing))}."
+        elif not crops:
+            reason = "Crop-reference coverage does not apply to a fallow-only plan."
         item = check("reference_rule_coverage", covered_status, reason)
         if covered_status == "unknown":
-            item.gap_type = "missing_reference"
+            if missing == {"unknown"}:
+                item.gap_type = "farmer_input"
+            elif missing:
+                item.gap_type = "missing_reference"
+            else:
+                item.gap_type = "local_review"
         checks.append(item)
     perennial = [crop.crop_name for crop in store.crops if crop.crop_id in crops and not crop.rotation_candidate]
     if perennial:
@@ -155,6 +175,7 @@ def candidate_sequences(store, request):
         yield [PlannedSeason(
             season=i + 1, crops=[crop], planting_date=request.baseline_sequence[i].planting_date,
             harvest_date=request.baseline_sequence[i].harvest_date,
+            planned_days=request.baseline_sequence[i].planned_days,
         ) for i, crop in enumerate(crops)]
 
 
@@ -167,7 +188,9 @@ def compare_rotations(store: DataStore, request: RotationRequest) -> RotationRes
     reference_mode = not rules and can_explore_references(store, request)
     counts = {"evaluated": 0, "rejected": 0, "unknown": 0, "eligible": 0}
     eligible = []
-    for sequence in candidate_sequences(store, request):
+    needs_crops = any("unknown" in season.crops for season in request.baseline_sequence)
+    sequences = [] if needs_crops else candidate_sequences(store, request)
+    for sequence in sequences:
         assessed = assess_strategy(store, request, sequence, "candidate", rules, mean_temperature)
         counts["evaluated"] += 1
         if assessed.feasibility_status == "infeasible":
@@ -201,7 +224,9 @@ def compare_rotations(store: DataStore, request: RotationRequest) -> RotationRes
         has_evidence = any(item.rule_id and item.status == "pass" for item in baseline.checks)
         if coverage and has_evidence:
             status = "reference_only"
-    if not rules and not reference_mode and store.rules.reference_checks:
+    if needs_crops:
+        status = "needs_input"
+    if not needs_crops and not rules and not reference_mode and store.rules.reference_checks:
         missing.insert(0, "Seasonal replacement options need known seasonal crops. Unreferenced crops and standing perennial systems are not replaced automatically.")
     slot_reason = "No additional adequately supported alternative is available."
     perennial_plan = any(item.criterion == "perennial_management" for item in baseline.checks)
@@ -211,6 +236,8 @@ def compare_rotations(store: DataStore, request: RotationRequest) -> RotationRes
         slot_reason = "No further distinct crop combination passed the local reference checks. Check your exclusions, pH, planned dates and missing observations; unsupported crops are not added."
     slots = [AlternativeSlot(strategy_id=f"alternative_{i}", reason=slot_reason)
              for i in range(len(alternatives) + 1, 3)]
+    if needs_crops:
+        slots = []
     sources = list(context.sources)
     sources.append(SOURCES[2])
     area_soil = store.location(request.exploration.location_id).soil_reference
