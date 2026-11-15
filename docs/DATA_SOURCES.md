@@ -33,3 +33,24 @@ Farmer answers are user inputs, not downloaded observations. Agricultural rules 
 No unrelated soil, weather, boundary, price or crop-yield dataset is added. Further datasets require an explicit scope decision. `resources_scope.csv` records the remaining listed resources and why they were deferred, including entries whose supplied descriptions are limited to the United States.
 
 The GAEZ map catalogue states CC-BY-NC-SA-4.0. Preserve attribution and the applicable source terms. No NASA or FAO endorsement is implied.
+
+## Downloaded reference update, 15 November 2026
+
+The live challenge page is still inaccessible to the retrieval tool. The existing user-supplied resource list names FAO GAEZ; FAO confirms that ECOCROP is integrated with GAEZ. The new files use that same source route, not an unrelated crop guide.
+
+Six additional species references were downloaded from original FAO ECOCROP sheets: Arabica coffee (749), Robusta coffee (750), Musa acuminata banana (7848), sugarcane (1884), vanilla (2131), and cotton (1160). Raw HTML, retrieval time, exact URLs and SHA-256 values are in `supplemental/fao_crop_sheets/` and `supplemental/crop_download_manifest.json`. Sugarcane's life span is absent from its data sheet, so its original FAO crop-view description is also saved and cited. Life span and candidate eligibility are explicit: perennial crops are assessed but never generated as seasonal replacements; the cotton sheet includes annual and perennial life spans, so its broad cycle is checked for the declared seasonal plan. No local cultivar, market or succession validation is implied.
+
+GAEZ's FAO soil reference links to HWSD. The FAO HWSD page, https://www.fao.org/land-water/resources/tools/databases/hwsd/en, directly links the HWSD2 database and raster archives. The downloaded files are **HWSD v2.0**, not the v2.2 release mentioned in newer GAEZ news. Their URLs and hashes are retained in `supplemental/soil_download_manifest.json`.
+
+Only four sample-point estimates are needed at runtime. The raster cell containing each point selects its mapping unit. From the database, the extraction keeps the 0–20 cm layer and selects the component with the highest SHARE, breaking ties by SEQUENCE. No arithmetic pH average is used. Raw selected database rows and point coordinates are retained in `soil_selected_rows.json`; compact runtime values are in `soil_points.json`.
+
+| Point | Mapping unit | Topsoil pH in water |
+| --- | --- | --- |
+| Masaka | 27533 | 5.5 |
+| Mbale | 27569 | 6.7 |
+| Gulu | 27473 | 5.1 |
+| Mbarara | 27475 | 5.1 |
+
+These are mapped estimates at approximately 1 km, not measurements from the farmer's field. A dominant mapped component may occupy less than half the mapping unit. A supplied measured pH takes precedence. A user can disable the estimate with `soil.use_area_estimate: false`. An estimated pH outside a crop range requests measurement rather than rejecting the crop as if the pH were certain.
+
+Preparation scripts are `scripts/download_crop_references.py` and `scripts/download_soil_references.py`. Install their preparation-only dependencies with `python -m pip install -r scripts/requirements-data.txt`. Global ZIP/MDB files stay in an ignored preparation cache; source rows and all runtime inputs are committed. The API never fetches them at runtime. Original archive files and checksums remain unchanged.

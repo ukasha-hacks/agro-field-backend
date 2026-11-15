@@ -36,13 +36,13 @@ def test_default_local_references_offer_options_without_claiming_validation(clie
     assert len(result["alternatives"]) == 2
     assert result["unfilled_alternative_slots"] == []
     assert result["baseline"]["sequence"][0]["crops"] == ["maize"]
-    assert result["candidate_counts"]["evaluated"] == 63
+    assert result["candidate_counts"]["evaluated"] == 124
     assert any("No reviewed" in item for item in result["missing_information"])
     assert "not agronomic ranking" in result["selection_method"]
     combinations = []
     for option in result["alternatives"]:
         crops = frozenset(crop for season in option["sequence"] for crop in season["crops"])
-        assert crops <= {"maize", "beans", "groundnut", "sorghum"}
+        assert crops <= {"maize", "beans", "groundnut", "sorghum", "cotton"}
         assert len(crops) >= 2
         combinations.append(crops)
         assert option["feasibility_status"] == "unknown"
@@ -77,7 +77,7 @@ def test_unknown_and_mixed_baseline_is_retained(client):
     body["baseline_sequence"][0]["crops"] = ["banana", "beans"]
     result = client.post("/api/v1/rotation-comparisons", json=body).json()
     assert result["baseline"]["sequence"][0]["crops"] == ["banana", "beans"]
-    assert result["status"] == "insufficient_evidence"
+    assert result["status"] == "reference_only"
 
 
 @pytest.mark.parametrize("change", ["order", "dates", "soil", "preferences"])
@@ -101,7 +101,7 @@ def test_combined_report_preserves_evidence_status(client):
     assert response.status_code == 200
     text = "\n".join(p.extract_text() for p in PdfReader(BytesIO(response.content)).pages)
     assert "reference only" in text
-    assert "not validated rotation recommendations" in text
+    assert "not a validated rotation recommendation" in text
     assert "No reviewed agricultural rules" in text
     assert "Existing Rotation" in text
 

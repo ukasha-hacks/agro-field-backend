@@ -28,3 +28,9 @@ Stage 5 changes presentation only. It bundles DM Sans regular and bold under the
 Enabled pH, minimum-cycle and historical-temperature checks from the existing crop/environment CSVs. No original data bytes or source URLs changed. Added reference_only response status, distinct exploratory crop combinations, explanations and source links. Reviewed agricultural rules stay pending; unsupported starting systems are retained without automatic replacement. The PDF carries the same label and evidence gaps. Paired frontend: stage/07-local-options.
 
 Validation: 53 backend tests pass, covering boundary pH, dates, mixtures, unsupported crops, missing temperature, display-topic independence, preferences, exclusions, deterministic output, reference mode disabled, original file checksums and offline requests. These checks validate the software, not agronomic outcomes.
+
+## Stage 7: downloaded references and clear conclusions
+
+Added six FAO crop sheets, explicit perennial handling, and four HWSD v2.0 topsoil pH estimates from FAO-linked archives. Original source files are unchanged. Corrected whole-sequence reference coverage and separated unvalidated succession evidence. Added explicit gap types and a concise shared conclusion for the API, frontend and PDF. A measured pH takes priority; estimates can be disabled and never become farm measurements. Paired frontend: stage/08-clear-rotation-answer.
+
+Validation: 70 backend tests pass, including all ten crop choices, original and new source integrity, soil-row provenance, measured-pH precedence, estimate opt-out, missing data, cotton duration, actual date checks, perennial safety and offline requests.

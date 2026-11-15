@@ -1,0 +1,18 @@
+{
+  "retrieved_at_utc": "2026-11-15T12:46:56.706646+00:00",
+  "source_url": "https://www.fao.org/land-water/resources/tools/databases/hwsd/en",
+  "allowed_resource": "FAO GAEZ",
+  "version": "HWSD v2.0 download linked by FAO",
+  "sources": [
+    {
+      "url": "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_DB.zip",
+      "sha256": "6c69e09137a8150f53c8a893fe3e4426d6b5cceb635c00378b54b7d64a9736c0"
+    },
+    {
+      "url": "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip",
+      "sha256": "55612130174f228f48d0691a2e01ab92150617dfd0d6605e65e3619eb5c123d8"
+    }
+  ],
+  "selection": "Raster cell containing each existing sample point; layer 0-20 cm; highest SHARE, then lowest SEQUENCE for ties.",
+  "limitations": "A dominant mapped component may occupy less than half a mapping unit. Estimates are not field measurements. No farm pH or soil treatment is inferred."
+}

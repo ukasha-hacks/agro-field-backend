@@ -1,3 +1,5 @@
+> Current update: ten crop references and four HWSD topsoil estimates are now downloaded locally. Reference coverage checks every crop separately from unvalidated crop order. Missing farm dates remain input gaps; area pH is explicitly estimated and can be disabled. The shared conclusion is returned by the API and printed in the PDF. See [DATA_SOURCES.md](DATA_SOURCES.md) and [ROTATION_RULES.md](ROTATION_RULES.md) for the current files, formulas and limits.
+
 # Understanding the Agro Field backend
 
 A practical guide to the code, the formulas and the reasons behind the design

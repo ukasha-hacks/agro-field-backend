@@ -19,10 +19,10 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-The latest cumulative implementation is on [stage/06-local-rules](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/06-local-rules), containing local data, historical exploration, reference-based rotation options and DM Sans PDF reports. Use it with frontend `stage/07-local-options`. Earlier stage branches remain available. To get the complete implementation:
+The latest cumulative implementation is on [stage/07-complete-reference-checks](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/07-complete-reference-checks), containing local data, historical exploration, reference-based rotation options and DM Sans PDF reports. Use it with frontend `stage/08-clear-rotation-answer`. Earlier stage branches remain available. To get the complete implementation:
 
 ```bash
-git clone --branch stage/06-local-rules https://github.com/ukasha-hacks/agro-field-backend.git
+git clone --branch stage/07-complete-reference-checks https://github.com/ukasha-hacks/agro-field-backend.git
 cd agro-field-backend
 ```
 
@@ -124,3 +124,9 @@ Environmental series: NASA POWER, MERRA-2, GPM IMERG and SYN1DEG. Crop reference
 See [DATA_SOURCES.md](docs/DATA_SOURCES.md) for the challenge resource link, direct provider references, why each input is used, and the GAEZ/ECOCROP relationship.
 
 AI assistance was used to implement and test this prototype. No agricultural review or field impact is claimed.
+
+## Complete reference checks
+
+The catalog now includes maize, beans, groundnut, sorghum, cotton, Arabica coffee, Robusta coffee, banana (Musa acuminata), sugarcane and vanilla. Supplementary FAO crop sheets and four HWSD topsoil estimates are saved locally with raw selected rows, source URLs, retrieval dates and hashes. See [the source update](docs/DATA_SOURCES.md).
+
+Measured pH overrides the area estimate. Use `soil.use_area_estimate: false` to leave missing pH unknown. Planting and harvest dates must come from the farmer; the API does not invent a calendar. The response includes one concise conclusion and explicit gap types. Reference coverage is distinct from validated crop order. Perennial systems receive their own conclusion instead of seasonal replacement advice. The combined PDF uses the same conclusion as the interface.

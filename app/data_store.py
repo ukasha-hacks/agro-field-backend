@@ -47,6 +47,7 @@ class DataStore:
         self._validate_daily()
         self.start_date = self.daily["date"].min().date()
         self.end_date = self.daily["date"].max().date()
+        self.soil_points = self._load_soil_points()
         self.locations = self._load_locations()
         self.crops = self._load_crops()
         try:
@@ -100,9 +101,13 @@ class DataStore:
                 location_id=row["sample_id"], name=row["sample_name"], region=row["region"],
                 latitude=row["latitude"], longitude=row["longitude"],
                 coverage_start=self.start_date, coverage_end=self.end_date,
+                soil_reference=self.soil_points.get(row["sample_id"]),
             )
             if not -90 <= location.latitude <= 90 or not -180 <= location.longitude <= 180:
                 raise ValueError("Invalid location coordinates")
+            soil = location.soil_reference
+            if soil and (soil.latitude != location.latitude or soil.longitude != location.longitude):
+                raise ValueError("Soil reference coordinates differ from the sample location")
             samples = self.daily[self.daily["sample_id"] == location.location_id]
             if not samples["latitude"].eq(location.latitude).all():
                 raise ValueError("Latitude differs between catalog and daily data")
@@ -121,9 +126,16 @@ class DataStore:
                 raise ValueError("Crop validation flag must be true or false")
             row["local_variety_validated"] = value == "true"
             crops.append(CropReference(**row))
+        extra = self.root / "supplemental/crops.json"
+        if extra.is_file():
+            crops.extend(CropReference(**row) for row in read_json(extra))
         if len({crop.crop_id for crop in crops}) != len(crops):
             raise ValueError("Duplicate crop IDs")
         return crops
+
+    def _load_soil_points(self):
+        path = self.root / "supplemental/soil_points.json"
+        return read_json(path) if path.is_file() else {}
 
     def _load_map_layers(self):
         metadata = self.root / "inputs/maps/gaez_map_metadata.json"
@@ -146,7 +158,8 @@ class DataStore:
     def _fingerprint(self):
         digest = hashlib.sha256()
         paths = [DAILY_FILE, LOCATION_FILE, CROP_FILE, "inputs/maps/gaez_map_metadata.json",
-                 "inputs/maps/gaez_maize_map_legend.csv", MAP_PREVIEW]
+                 "inputs/maps/gaez_maize_map_legend.csv", MAP_PREVIEW,
+                 "supplemental/crops.json", "supplemental/soil_points.json"]
         for name in sorted(paths):
             path = self.root / name
             digest.update(name.encode())

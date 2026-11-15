@@ -26,6 +26,18 @@ class Source(Model):
     license: str | None = None
 
 
+class SoilReference(Model):
+    ph: float = Field(ge=0, le=14)
+    depth_cm: tuple[int, int]
+    mapping_unit_id: int
+    component_share_percent: float = Field(gt=0, le=100)
+    source_url: str
+    resolution: str
+    method: str
+    latitude: float
+    longitude: float
+
+
 class Location(Model):
     location_id: str
     name: str
@@ -35,6 +47,7 @@ class Location(Model):
     coverage_start: Date
     coverage_end: Date
     spatial_scope: str = "gridded_point_sample"
+    soil_reference: SoilReference | None = None
 
 
 class Geometry(Model):
@@ -79,6 +92,9 @@ class CropReference(Model):
     source_resource: str
     source_url: str
     local_variety_validated: bool
+    life_span: Literal["annual", "perennial", "annual_or_perennial", "unknown"] = "unknown"
+    rotation_candidate: bool = True
+    life_span_source_url: str | None = None
 
 
 class CropCatalog(Model):

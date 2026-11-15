@@ -5,7 +5,7 @@ from app.config import APP_VERSION, METHODS_VERSION
 from app.data_store import MAP_ID, MAP_PREVIEW, SOURCES, DataStore
 from app.dependencies import get_store
 from app.errors import ApiError
-from app.schemas import CropCatalog, FeatureCollection, Health, Location, MapLayer, Metadata, Warning
+from app.schemas import CropCatalog, FeatureCollection, Health, Location, MapLayer, Metadata, Source, Warning
 
 router = APIRouter(tags=["Catalog"])
 
@@ -51,6 +51,11 @@ def map_preview(layer_id: str, store: DataStore = Depends(get_store)):
 
 @router.get("/api/v1/metadata", response_model=Metadata)
 def metadata(store: DataStore = Depends(get_store)):
+    sources = list(SOURCES)
+    soil = next((location.soil_reference for location in store.locations.values() if location.soil_reference), None)
+    if soil:
+        sources.append(Source(source_id="fao_hwsd", name="FAO HWSD v2.0 topsoil estimates", url=soil.source_url,
+            period="Soil inventory, 0-20 cm layer", limitations=soil.method + "; " + soil.resolution))
     return Metadata(
         coverage_start=store.start_date, coverage_end=store.end_date,
         categories=["rainfall", "temperature", "soil_wetness"], intervals=["daily", "monthly"],
@@ -62,5 +67,5 @@ def metadata(store: DataStore = Depends(get_store)):
         features={"exploration": True, "pdf_export": True, "map_references": bool(store.map_layers),
                   "rotation_comparison": True, "reviewed_rotation_scoring": False,
                   "local_reference_options": bool(store.rules.reference_checks)},
-        sources=SOURCES, warnings=store.warnings(), data_version=store.version, methods_version=METHODS_VERSION,
+        sources=sources, warnings=store.warnings(), data_version=store.version, methods_version=METHODS_VERSION,
     )
