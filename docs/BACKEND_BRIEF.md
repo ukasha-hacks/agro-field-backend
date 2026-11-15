@@ -1,3 +1,5 @@
+> Stage 6 implementation update: local species-range checks may now return explicitly unvalidated `reference_only` options. This extends the original no-alternatives behavior below without declaring agricultural review complete. See [ROTATION_RULES.md](ROTATION_RULES.md) for the current formulas, selection order and remaining limits. Only existing resource files are used.
+
 # Agro Field backend: complete implementation prompt
 
 Version: 1.0 | Prepared: 14 November 2026

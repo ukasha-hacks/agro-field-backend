@@ -8,6 +8,9 @@ from app.rotation_schemas import (
 )
 from app.schemas import Source, Warning
 from app.services.explore import explore, fingerprint
+from app.services.reference_checks import (
+    assess_references, can_explore_references, choose_reference_options, historical_temperature,
+)
 
 
 def load_rules(path):
@@ -59,7 +62,7 @@ def agricultural_check(rule: AgriculturalRule, request, sequence):
     return check(rule.criterion, status, "This crop requires irrigation under the cited rule; no water-volume estimate is made.", rule)
 
 
-def assess_strategy(store, request, sequence, strategy_id, rules):
+def assess_strategy(store, request, sequence, strategy_id, rules, mean_temperature=None):
     checks = []
     crops = {crop for season in sequence for crop in season.crops}
     supported = {crop.crop_id for crop in store.crops}
@@ -83,6 +86,7 @@ def assess_strategy(store, request, sequence, strategy_id, rules):
     checks.append(check("calendar_overlap", calendar_status, calendar_reason))
     checks.append(check("growing_window_suitability", "unknown",
                         "Local maturity periods and season-specific climate/water rules are not supplied; historical context is descriptive."))
+    checks.extend(assess_references(store, request, sequence, mean_temperature))
     covered = set()
     for rule in rules:
         relevant = crops & set(rule.crops)
@@ -127,26 +131,31 @@ def candidate_sequences(store, request):
 def compare_rotations(store: DataStore, request: RotationRequest) -> RotationResponse:
     context = explore(store, request.exploration)
     rules = store.rules.reviewed_rules()
-    baseline = assess_strategy(store, request, request.baseline_sequence, "existing_rotation", rules)
+    uses_temperature = "historical_temperature" in store.rules.reference_checks
+    mean_temperature = historical_temperature(store, request.exploration) if uses_temperature else None
+    baseline = assess_strategy(store, request, request.baseline_sequence, "existing_rotation", rules, mean_temperature)
+    reference_mode = not rules and can_explore_references(store, request)
     counts = {"evaluated": 0, "rejected": 0, "unknown": 0, "eligible": 0}
     eligible = []
     for sequence in candidate_sequences(store, request):
-        assessed = assess_strategy(store, request, sequence, "candidate", rules)
+        assessed = assess_strategy(store, request, sequence, "candidate", rules, mean_temperature)
         counts["evaluated"] += 1
         if assessed.feasibility_status == "infeasible":
             counts["rejected"] += 1
         elif assessed.feasibility_status == "unknown":
             counts["unknown"] += 1
-            # Partial options need reviewed evidence, not just a position in enumeration.
-            has_pass = any(c.rule_id and c.status == "pass" for c in assessed.checks)
-            if rules and has_pass:
+            # Reference ideas and reviewed comparisons have different evidence gates.
+            has_pass = any(c.rule_id and c.status == "pass" and
+                           (reference_mode or not c.rule_id.startswith("reference:")) for c in assessed.checks)
+            if (rules or reference_mode) and has_pass:
                 eligible.append(assessed)
+                counts["eligible"] += 1
         else:
             counts["eligible"] += 1
             eligible.append(assessed)
     preferred = set(request.preferred_crops)
     eligible.sort(key=lambda item: -sum(crop in preferred for season in item.sequence for crop in season.crops))
-    alternatives = eligible[:2]
+    alternatives = choose_reference_options(eligible, request, mean_temperature) if reference_mode else eligible[:2]
     for index, alternative in enumerate(alternatives, 1):
         alternative.strategy_id = f"alternative_{index}"
     missing = sorted({item.reason for strategy in [baseline, *alternatives] for item in strategy.checks if item.status == "unknown"})
@@ -155,10 +164,26 @@ def compare_rotations(store: DataStore, request: RotationRequest) -> RotationRes
     status = "insufficient_evidence"
     if alternatives:
         status = "provisional" if missing else "assessed"
-    slots = [AlternativeSlot(strategy_id=f"alternative_{i}", reason="No additional adequately supported alternative is available.")
+        if reference_mode:
+            status = "reference_only"
+    if not rules and not reference_mode and store.rules.reference_checks:
+        missing.insert(0, "Reference-only options need at least one known starting crop and references for every named starting crop. Coffee, banana and other unreferenced systems are not replaced automatically.")
+    slot_reason = "No additional adequately supported alternative is available."
+    if reference_mode:
+        slot_reason = "No further distinct crop combination passed the local reference checks. Check your exclusions, pH, planned dates and missing observations; unsupported crops are not added."
+    slots = [AlternativeSlot(strategy_id=f"alternative_{i}", reason=slot_reason)
              for i in range(len(alternatives) + 1, 3)]
     sources = list(context.sources)
     sources.append(SOURCES[2])
+    if store.rules.reference_checks:
+        if uses_temperature and not any(source.source_id == SOURCES[0].source_id for source in sources):
+            sources.append(SOURCES[0])
+        for crop in store.crops:
+            sources.append(Source(
+                source_id=f"reference:{crop.crop_id}", name=f"{crop.crop_name} species reference",
+                url=crop.source_url, period="Supplied local ECOCROP reference",
+                limitations="Broad species ranges; not locally validated varieties or succession rules.",
+            ))
     for rule in rules:
         sources.append(Source(
             source_id=f"rule:{rule.rule_id}", name=rule.description, url=rule.source_url,
@@ -174,4 +199,6 @@ def compare_rotations(store: DataStore, request: RotationRequest) -> RotationRes
         environmental_context=context, priority=request.priority, rules_version=store.rules_version,
         criteria=sorted({item.criterion for item in baseline.checks}), missing_information=missing,
         sources=sources, warnings=warnings, candidate_counts=counts,
+        selection_method=("local_species_reference_checks_then_preferences_and_distinct_crop_sets; not agronomic ranking"
+                          if reference_mode else "constraint_checks_then_explicit_crop_preferences; no agronomic overall score"),
     )

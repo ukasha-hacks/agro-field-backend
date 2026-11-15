@@ -60,6 +60,7 @@ def metadata(store: DataStore = Depends(get_store)):
             {"category": "soil_wetness", "unit": "dimensionless_index", "monthly_aggregation": "mean"},
         ],
         features={"exploration": True, "pdf_export": True, "map_references": bool(store.map_layers),
-                  "rotation_comparison": True, "reviewed_rotation_scoring": False},
+                  "rotation_comparison": True, "reviewed_rotation_scoring": False,
+                  "local_reference_options": bool(store.rules.reference_checks)},
         sources=SOURCES, warnings=store.warnings(), data_version=store.version, methods_version=METHODS_VERSION,
     )

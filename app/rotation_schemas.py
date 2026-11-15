@@ -6,7 +6,7 @@ from pydantic import Field, field_validator, model_validator
 from app.schemas import ExploreRequest, ExploreResponse, Model, Source, Warning
 
 CheckStatus = Literal["pass", "fail", "unknown"]
-AssessmentStatus = Literal["assessed", "provisional", "insufficient_evidence"]
+AssessmentStatus = Literal["assessed", "provisional", "reference_only", "insufficient_evidence"]
 
 
 class CropHistory(Model):
@@ -105,6 +105,7 @@ class RuleSet(Model):
     review_status: Literal["pending", "reviewed"]
     notes: str
     rules: list[AgriculturalRule]
+    reference_checks: list[Literal["soil_ph", "minimum_cycle_days", "historical_temperature"]] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def unique_rules(self):

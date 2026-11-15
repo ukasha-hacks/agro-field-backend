@@ -34,3 +34,22 @@ def test_pdf_without_optional_map(client, monkeypatch, tmp_path):
     text = "\n".join(p.extract_text() for p in PdfReader(BytesIO(response.content)).pages)
     assert response.status_code == 200
     assert "Reference map unavailable" in text
+
+
+def test_pdf_embeds_readable_fonts_and_uses_plain_wetness_units(client):
+    response = client.post("/api/v1/exports/pdf", json={"exploration": selection()})
+    reader = PdfReader(BytesIO(response.content))
+    text = "\n".join(page.extract_text() for page in reader.pages)
+    assert "dimensionless_index" not in text
+    assert "Surface wetness: average" in text
+    assert "Root-zone wetness: average" in text
+    assert "/ 1" in text
+    fonts = {}
+    for page in reader.pages:
+        for ref in page["/Resources"].get("/Font", {}).values():
+            font = ref.get_object()
+            if "DMSans" in str(font.get("/BaseFont", "")):
+                descriptor = font["/FontDescriptor"].get_object()
+                assert descriptor["/FontFile2"].get_object().get_data()
+                fonts[str(font["/BaseFont"])] = font
+    assert len(fonts) >= 2
