@@ -6,7 +6,7 @@ from pydantic import Field, field_validator, model_validator
 from app.schemas import ExploreRequest, ExploreResponse, Model, Source, Warning
 
 CheckStatus = Literal["pass", "fail", "unknown"]
-AssessmentStatus = Literal["assessed", "provisional", "reference_only", "insufficient_evidence"]
+AssessmentStatus = Literal["assessed", "provisional", "reference_only", "needs_input", "insufficient_evidence"]
 
 
 class CropHistory(Model):
@@ -31,6 +31,7 @@ class PlannedSeason(CropHistory):
     season: int = Field(ge=1, le=3)
     planting_date: date | None = None
     harvest_date: date | None = None
+    planned_days: int | None = Field(default=None, ge=1, le=3660)
 
     @model_validator(mode="after")
     def check_dates(self):

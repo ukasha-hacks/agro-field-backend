@@ -52,10 +52,12 @@ def assess_references(store, request, sequence, mean_temperature):
                 checks.append(item)
         if "minimum_cycle_days" in enabled and crop.rotation_candidate:
             seasons = [season for season in sequence if crop.crop_id in season.crops]
-            lengths = [
-                (season.harvest_date - season.planting_date).days + 1
-                for season in seasons if season.planting_date and season.harvest_date
-            ]
+            lengths = []
+            for season in seasons:
+                if season.planting_date and season.harvest_date:
+                    lengths.append((season.harvest_date - season.planting_date).days + 1)
+                elif season.planned_days is not None:
+                    lengths.append(season.planned_days)
             status = "unknown"
             reason = f"{name}: the saved species cycle is {crop.crop_cycle_days_min}-{crop.crop_cycle_days_max} days. "
             if any(days < crop.crop_cycle_days_min for days in lengths):
@@ -63,9 +65,9 @@ def assess_references(store, request, sequence, mean_temperature):
                 reason += "A planned season is shorter than the published minimum."
             elif len(lengths) == len(seasons):
                 status = "pass"
-                reason += "The planned periods reach the minimum; local variety maturity is still unverified."
+                reason += f"Your available windows ({', '.join(str(days) for days in lengths)} days) reach the minimum; local variety maturity is still unverified."
             else:
-                reason += "Add planting and harvest dates to check the minimum."
+                reason += "Add available growing days or planting and harvest dates to check the minimum."
             checks.append(reference_check(crop, "minimum_cycle_days", status, reason))
         if "historical_temperature" in enabled:
             low, high = crop.temperature_c_absolute_min, crop.temperature_c_absolute_max

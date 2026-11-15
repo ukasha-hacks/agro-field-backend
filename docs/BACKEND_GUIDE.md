@@ -34,7 +34,7 @@ The entry point is app/main.py. At startup, its lifespan function loads DataStor
 | --- | --- |
 | GET /health | Whether the app and local store started |
 | GET /api/v1/locations | Four supported sample points |
-| GET /api/v1/crops | The four species reference records |
+| GET /api/v1/crops | Ten species reference records, with seasonal/perennial flags |
 | GET /api/v1/metadata | Coverage, source and method information |
 | POST /api/v1/explore | Historical panels, statistics and explanations |
 | POST /api/v1/rotation-comparisons | Baseline checks, possible alternatives and gaps |
@@ -118,7 +118,7 @@ The rotation request includes the historical selection plus crop history and exa
 | Water supply and one priority | Expresses the farmer’s situation and the evidence needed |
 | Preferred and excluded crops | Constrains choices and orders eligible options |
 | Optional soil pH, texture and carbon | Supplies local information that wetness cannot infer |
-| Optional planting and harvest dates | Allows a season-overlap check |
+| Optional growing days or planting and harvest dates | Checks the saved minimum crop cycle; exact dates also allow overlap checks |
 
 The string unknown means the farmer is not sure. An empty crop list means fallow. They are different. Mixed crops and fallow remain recordable, but the present automatic rules do not establish their feasibility. A crop may not appear in both preferred and excluded lists.
 
@@ -158,7 +158,7 @@ For each season, I is 1 if its crop is preferred and 0 otherwise. Eligible candi
 
 ### How local references now support exploratory options
 
-The config enables three reference checks while reviewed agricultural rules remain pending. For each referenced crop, the engine compares supplied pH with its saved absolute pH range, inclusive planned days with the saved minimum cycle, and the selected past temperature mean with the saved broad temperature range. Any missing temperature day makes that historical mean unknown. The mean is context, not a forecast or a crop-stage heat check.
+The config enables three reference checks while reviewed agricultural rules remain pending. For each referenced crop, the engine compares supplied pH with its saved absolute pH range, inclusive date-derived days (or supplied planned_days) with the saved minimum cycle, and the selected past temperature mean with the saved broad temperature range. Any missing temperature day makes that historical mean unknown. The mean is context, not a forecast or a crop-stage heat check.
 
 At least one sourced range check must pass, and no declared check may fail, before a candidate can be displayed. The reference-only display order favors distinct preferred crops, more distinct crops and then the starting crop first, with alphabetical ties. Different crop sets give visibly different options; this is not a proven benefit of diversity or a validated crop succession. Reviewed-rule ordering above remains unchanged.
 
@@ -244,3 +244,9 @@ Read app/main.py, then app/data_store.py, app/services/explore.py and app/servic
 [NASA POWER documentation](https://power.larc.nasa.gov/docs/methodology/)
 
 [FAO GAEZ and linked crop references](https://gaez.fao.org/)
+
+### Completing the plan before comparison
+
+A season marked Not sure is an unfinished answer, not missing satellite data. The API returns needs_input, names those planned seasons, and generates no alternatives until each is a crop choice or Fallow. Unknown past crops do not block this step.
+
+For crop duration, supply available growing days, for example 120. Compare that value with the saved species minimum: groundnut needs at least 90 days in the supplied reference, so 89 fails and 90 passes this particular check. Exact dates override the duration if both are supplied. This does not establish local variety maturity or water sufficiency. Fallow is a known choice, but its agricultural effects are not assessed by these files.
