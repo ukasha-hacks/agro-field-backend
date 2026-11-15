@@ -97,8 +97,16 @@ Errors use `error.code`, `error.message`, and `error.details`. Bad selections re
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | DATA_DIR | Project-relative data folder | Local dataset root |
-| CORS_ORIGINS | http://localhost:3000,http://localhost:5173 | Explicit frontend origins, comma separated |
+| CORS_ORIGINS | https://agrofields.vercel.app,http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173 | Explicit frontend origins, comma separated |
 | APP_ENV | development | Environment label |
+
+### Vercel connection
+
+The deployed API is https://agrofield-api.vercel.app. Its default CORS list includes the deployed frontend, https://agrofields.vercel.app, and the local development addresses above.
+
+To configure the backend project explicitly in Vercel, set `CORS_ORIGINS=https://agrofields.vercel.app` and `APP_ENV=production`, then redeploy. `CORS_ORIGINS` replaces the default list; add local addresses to this comma-separated value if you also want local browser access. Use origins without an API path. Trailing slashes are removed when the setting is read.
+
+In the frontend Vercel project, set `BACKEND_URL=https://agrofield-api.vercel.app` and redeploy. The Next.js server forwards `/api/backend/*` requests to this API. Test https://agrofield-api.vercel.app/health and https://agrofields.vercel.app/api/backend/locations; the latter should return four sample areas.
 
 ## Data limits
 
