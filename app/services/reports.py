@@ -211,10 +211,15 @@ def add_rotation(story, rotation, styles):
     status = rotation.status.replace("_", " ")
     priority = rotation.priority.replace("_", " ")
     story.append(paragraph(f"Assessment status: {status}. Priority: {priority}.", styles["BodyText"]))
+    if rotation.status == "reference_only":
+        story.append(paragraph("Reference-based options for local review, not validated rotation recommendations. Only the supplied local files were used.", styles["BodyText"]))
     for strategy in [rotation.baseline, *rotation.alternatives]:
         story.append(paragraph(strategy.strategy_id.replace("_", " ").title(), styles["Heading3"]))
         sequence = [" + ".join(season.crops) or "Fallow" for season in strategy.sequence]
         story.append(paragraph(" -> ".join(sequence), styles["BodyText"]))
+        if strategy.strategy_id != "existing_rotation":
+            for text in [*strategy.explanations, *(strategy.tradeoffs or [])]:
+                story.append(paragraph(text, styles["BodyText"]))
         rows = [["Criterion", "Result", "Explanation"]]
         rows.extend([[item.criterion.replace("_", " "), item.status, item.reason] for item in strategy.checks])
         story.append(table(rows, [PAGE_WIDTH * 0.26, PAGE_WIDTH * 0.13, PAGE_WIDTH * 0.61], styles))

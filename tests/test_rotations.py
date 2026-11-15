@@ -28,16 +28,27 @@ def fixture_rules():
     )
 
 
-def test_default_rules_do_not_invent_recommendations(client):
+def test_default_local_references_offer_options_without_claiming_validation(client):
     response = client.post("/api/v1/rotation-comparisons", json=rotation_body())
     assert response.status_code == 200
     result = response.json()
-    assert result["status"] == "insufficient_evidence"
-    assert result["alternatives"] == []
-    assert len(result["unfilled_alternative_slots"]) == 2
+    assert result["status"] == "reference_only"
+    assert len(result["alternatives"]) == 2
+    assert result["unfilled_alternative_slots"] == []
     assert result["baseline"]["sequence"][0]["crops"] == ["maize"]
     assert result["candidate_counts"]["evaluated"] == 63
     assert any("No reviewed" in item for item in result["missing_information"])
+    assert "not agronomic ranking" in result["selection_method"]
+    combinations = []
+    for option in result["alternatives"]:
+        crops = frozenset(crop for season in option["sequence"] for crop in season["crops"])
+        assert crops <= {"maize", "beans", "groundnut", "sorghum"}
+        assert len(crops) >= 2
+        combinations.append(crops)
+        assert option["feasibility_status"] == "unknown"
+        assert option["potential_benefits"] is None
+        assert any(check["criterion"].endswith("historical_temperature") and check["status"] == "pass" for check in option["checks"])
+    assert len(set(combinations)) == 2
 
 
 def test_reviewed_fixture_checks_preferences_and_exclusions(client):
@@ -89,7 +100,8 @@ def test_combined_report_preserves_evidence_status(client):
     response = client.post("/api/v1/exports/pdf", json={"exploration": body["exploration"], "rotation": body})
     assert response.status_code == 200
     text = "\n".join(p.extract_text() for p in PdfReader(BytesIO(response.content)).pages)
-    assert "insufficient evidence" in text
+    assert "reference only" in text
+    assert "not validated rotation recommendations" in text
     assert "No reviewed agricultural rules" in text
     assert "Existing Rotation" in text
 

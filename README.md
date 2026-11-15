@@ -19,14 +19,14 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-Stages 1-3 are available on main. The latest cumulative implementation is on [stage/05-readable-pdf](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/05-readable-pdf), containing local data, historical exploration, evidence-aware rotation comparison and readable DM Sans PDF reports, with 37 passing tests. Earlier stage branches remain available. To get the complete implementation:
+The latest cumulative implementation is on [stage/06-local-rules](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/06-local-rules), containing local data, historical exploration, reference-based rotation options and DM Sans PDF reports. Use it with frontend `stage/07-local-options`. Earlier stage branches remain available. To get the complete implementation:
 
 ```bash
-git clone --branch stage/05-readable-pdf https://github.com/ukasha-hacks/agro-field-backend.git
+git clone --branch stage/06-local-rules https://github.com/ukasha-hacks/agro-field-backend.git
 cd agro-field-backend
 ```
 
-The rotation endpoint is implemented, but the supplied agricultural rule set is pending review. Its default result is **insufficient evidence**, not invented crop advice. See [rotation rules and current limits](docs/ROTATION_RULES.md).
+The rotation endpoint is implemented, but the supplied agricultural rule set is pending review. Its default maize example now returns **reference_only** options from saved species ranges, with explicit gaps. These are ideas for local review, not validated crop advice. Unsupported systems still return insufficient evidence. See [rotation rules and current limits](docs/ROTATION_RULES.md).
 
 The [source guide](docs/DATA_SOURCES.md) records challenge-listed resources, local file provenance, reasons for use and limitations.
 
@@ -69,11 +69,11 @@ curl -X POST http://127.0.0.1:8000/api/v1/rotation-comparisons \
   --data-binary @examples/rotation.json
 ```
 
-This separate workflow accepts crop history, a three-season baseline, water availability, priorities, exclusions/preferences and optional soil information. The baseline stays visible even when it has a failed or unknown check. Alternatives require supporting agricultural evidence. The endpoint explains unfilled comparison slots.
+This separate workflow accepts crop history, a three-season baseline, water availability, priorities, exclusions/preferences and optional soil information. The baseline stays visible even when it has a failed or unknown check. Reference-based alternatives use saved pH, minimum crop-cycle and historical-temperature checks. They remain unvalidated for crop succession, seasonal water needs and priority outcomes. The endpoint explains unfilled comparison slots.
 
-For a combined PDF, send an export request with `exploration` and the full `rotation` request. Their exploration selections must match. The report retains provisional/insufficient-evidence labels and the missing-information list.
+For a combined PDF, send an export request with `exploration` and the full `rotation` request. Their exploration selections must match. The report retains reference-only/provisional/insufficient-evidence labels and the missing-information list.
 
-Use [the combined request](examples/export-with-rotation.json) with the PDF endpoint above. A generated [combined Gulu report](examples/gulu-2024-comparison.pdf) is included.
+Use [the combined request](examples/export-with-rotation.json) with the PDF endpoint above. The [earlier-stage combined Gulu report](examples/gulu-2024-comparison.pdf) is retained for comparison. Run the combined request to generate a current reference-only report.
 
 ## Endpoints
 

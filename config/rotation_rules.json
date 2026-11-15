@@ -1,6 +1,7 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "review_status": "pending",
-  "notes": "Local agricultural rules have not been supplied or reviewed. Do not manufacture recommendations.",
+  "notes": "Reference checks read ranges directly from the supplied crop CSV and local historical temperature file. They support exploratory single-crop options, not validated succession, mixture, water or benefit recommendations. Local agricultural review remains pending.",
+  "reference_checks": ["soil_ph", "minimum_cycle_days", "historical_temperature"],
   "rules": []
 }

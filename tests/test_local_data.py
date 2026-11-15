@@ -67,6 +67,9 @@ def test_startup_exploration_and_export_need_no_network(client, monkeypatch):
         assert offline_client.get("/health").status_code == 200
         body = selection(categories=["rainfall"])
         assert offline_client.post("/api/v1/explore", json=body).status_code == 200
+        from tests.test_rotations import rotation_body
+        rotation = rotation_body()
+        assert offline_client.post("/api/v1/rotation-comparisons", json=rotation).json()["status"] == "reference_only"
         report = offline_client.post("/api/v1/exports/pdf", json={"exploration": body})
         assert report.status_code == 200
         assert report.content.startswith(b"%PDF-")

@@ -6,7 +6,7 @@ Prepared for Ukasha Katuntu, 15 November 2026. This guide follows the actual Fas
 
 ### The main idea
 
-Agro Field calculates historical summaries and checks declared constraints. It does not train a model to predict the next crop, forecast weather or estimate farm income. The current agricultural rules are empty and pending review, so the normal assessment returns a starting plan and explained evidence gaps.
+Agro Field calculates historical summaries and checks declared constraints. It does not train a model to predict the next crop, forecast weather or estimate farm income. Reviewed agricultural rules remain empty and pending review. Configured local species checks now support reference-only options alongside the starting plan and evidence gaps.
 
 The archive contains 14,612 daily records across four sample points near Gulu, Mbale, Masaka and Mbarara, covering 2016 through 2025. One point in each broad region keeps the first demonstration manageable. This is not a representative sample of every farm or district.
 
@@ -146,7 +146,7 @@ The engine enumerates the available crop catalogue after exclusions. With four c
 | fail | A declared constraint is violated |
 | unknown | An input, rule or applicable method is missing |
 
-Any failed check makes a candidate infeasible. Unknown checks keep its local suitability unknown. A partial candidate may appear only when reviewed rules exist and at least one sourced rule check passes. The result must remain provisional and show the gaps. The current code always leaves the growing-window check unknown.
+Any failed check makes a candidate infeasible. Unknown checks keep its local suitability unknown. A provisional candidate under reviewed rules needs at least one passed reviewed check. Reference-only options use a separate, explicitly labelled path described below. The result must remain provisional and show the gaps. The current code always leaves the growing-window check unknown.
 
 ### Preferences are not an agronomic score
 
@@ -154,9 +154,15 @@ Preference matches = count of planned crop occurrences in the farmer’s preferr
 
 For each season, I is 1 if its crop is preferred and 0 otherwise. Eligible candidates are ordered by these matches, then the first two are kept. This is not a soil health, water, income or resilience score. Priority-specific checks explain missing evidence instead of awarding invented points.
 
-### Why the default result has two empty slots
+### How local references now support exploratory options
 
-config/rotation_rules.json has review_status pending and no rules. The engine still records the baseline and evaluates simple constraints, but it cannot supply supported alternatives. The response status is insufficient_evidence. The presentation’s two candidate examples are illustrations for expert discussion, not production API results.
+The config enables three reference checks while reviewed agricultural rules remain pending. For each referenced crop, the engine compares supplied pH with its saved absolute pH range, inclusive planned days with the saved minimum cycle, and the selected past temperature mean with the saved broad temperature range. Any missing temperature day makes that historical mean unknown. The mean is context, not a forecast or a crop-stage heat check.
+
+At least one sourced range check must pass, and no declared check may fail, before a candidate can be displayed. The reference-only display order favors distinct preferred crops, more distinct crops and then the starting crop first, with alphabetical ties. Different crop sets give visibly different options; this is not a proven benefit of diversity or a validated crop succession. Reviewed-rule ordering above remains unchanged.
+
+The normal maize example returns `reference_only` with two options. All remain unknown for local suitability. An unreferenced crop such as coffee or banana is recorded but blocks replacing that growing system automatically. A pH conflict, short dates, missing observations or tight exclusions can leave fewer options. The original files contain only maize, beans, groundnut and sorghum; no outside references are added.
+
+See [the exact checks, formulas and selection procedure](ROTATION_RULES.md).
 
 ## Connect the calculations to the report and version IDs
 

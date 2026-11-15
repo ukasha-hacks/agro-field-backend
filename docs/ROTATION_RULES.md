@@ -1,38 +1,48 @@
-# Rotation comparisons and their current limits
+# Local reference checks and rotation evidence
 
-The supplied species references do not contain a locally validated rotation model. Therefore `config/rotation_rules.json` starts with `review_status: pending` and no rules. The working endpoint returns the farmer's baseline, actual historical context, check results and missing information. It does not select the first two generated sequences and call them recommendations.
+The default configuration now enables reference-based options. It reads only the supplied local files. It does not fetch source URLs and does not mark the agricultural rules as reviewed.
 
-## Request behavior
+## Files used
 
-Use `examples/rotation.json` for the complete request structure. It is an example request, not a real farmer record. Crop history is ordered from older to newer. The baseline contains three planned seasons; unknown names, mixed cropping and fallow are retained. Crop names are normalized to lowercase and surrounding spaces removed. `unknown` must appear alone in an unknown season.
+- `config/rotation_rules.json`: enables `soil_ph`, `minimum_cycle_days` and `historical_temperature` under `reference_checks`.
+- `data/Field_Shift_Relevant_Data/inputs/crops/crop_reference_requirements.csv`: broad ECOCROP species ranges and original source URLs for maize, beans, groundnut and sorghum.
+- `data/Field_Shift_Relevant_Data/inputs/environment/daily_environment_2016_2025.csv`: the selected sample point's historical daily mean temperature, delivered through NASA POWER.
 
-Planting/harvest dates describe a proposed plan and may be in the future. The nested exploration request selects historical evidence only. No future weather is supplied. Missing planting dates leave calendar checks unknown.
+All thresholds come directly from those existing crop records. The original download and checksum manifest are unchanged. Coffee, banana, cassava and other crops have no reference here; no outside information is added to fill those gaps.
 
-## Checks implemented now
+## Checks and formulas
 
-- Explicit farmer exclusions, reference availability and planned-season overlap.
-- A documented schema for reviewed crop-return, pH-range and irrigation-requirement rules.
-- Candidate enumeration for four single-crop choices across three seasons, with duplicates and exclusions removed.
-- A return-interval rule can inspect crop history and, when `repeats` is true, the last-to-first transition.
-- Source IDs, rule versions and a request fingerprint are included.
-- Missing information stays unknown. No overall agricultural score, predicted yield, market return or water saving is generated.
-
-## Supported rule kinds
-
-| Kind | Required parameter | Meaning |
+| Check | Calculation | Missing or conflicting evidence |
 | --- | --- | --- |
-| minimum_crop_break | min_break_seasons | Number of intervening seasons required before a crop returns; not a number of years or a crop-family rule |
-| soil_ph_range | minimum, maximum | Compare the farmer-supplied pH with an applicable sourced range |
-| requires_irrigation | No numeric threshold | Check declared water supply; limited/unknown irrigation capacity remains unknown |
+| Soil pH | absolute minimum <= farmer pH <= absolute maximum | Missing pH is unknown; outside the broad range flags a reference conflict |
+| Minimum crop cycle | inclusive days = harvest - planting + 1; compare with the saved minimum | Missing dates are unknown; any period shorter than the minimum fails this check |
+| Historical mean temperature | mean of all selected daily mean temperatures; compare with the saved absolute range | Any missing day leaves the mean unknown; a mean outside the range needs review, rather than proving the crop unsuitable |
+| Calendar | each later planting date must follow the previous harvest date | Missing dates are unknown; overlap fails |
+| Farmer exclusions | no excluded crop in the sequence | An excluded crop fails |
 
-Every rule also needs rule_id, description, criterion, crops, source_url, applicability and review_status. Both the rule set and the individual rule must be reviewed before it affects agricultural checks. Review labels are assertions made by whoever maintains the file, not automatic proof of expert review. Do not change them merely to unlock alternatives.
+The historical temperature check passes only a comparison of a past-period mean with a broad species range. It cannot confirm crop-stage conditions, heat damage, a future planting window or local suitability. A minimum-cycle pass does not verify the variety, calendar or maturity date. Annual rainfall ranges are not used as seasonal water demand.
 
-Use the challenge's permitted resource sources. A new source requires an explicit scope decision. No source URL is fetched during a request.
+## How options are selected
 
-## Important remaining work
+1. Keep the farmer's starting plan and all its checks, including mixtures, fallow, unknowns and unsupported crops.
+2. Enumerate three single-crop seasons from the four referenced crops after exclusions. Do not invent crops or planting dates.
+3. Remove candidates with any failed declared check. At least one positive sourced range check is required; mere enumeration does not qualify a candidate.
+4. In reference-only mode, sort by the number of distinct preferred crops, then the number of distinct crops, then keeping the starting crop first, then crop IDs for reproducibility. This is a transparent display heuristic, not a scientifically validated rotation rule.
+5. Show up to two different crop combinations, each containing at least two species. Different permutations of the same crop set do not fill two cards. A repeated crop is not universally banned; no unsourced crop-break interval is introduced.
+6. Label the result `reference_only`, with unknown feasibility and local review required. Explain passed checks, tradeoffs and all unresolved information.
 
-Growing-window suitability always remains unknown in this implementation because local maturity, crop-stage climate and water parameters were not supplied. Priority outcomes also remain unquantified. Adding a reviewed rule can support a **partial, provisional** comparison; it does not enable a validated recommendation or a complete farm simulation. Such partial alternatives must have at least one applicable reviewed rule pass and no failed declared check. They are ordered only by explicit crop-preference overlap, with a stable tie order; that is not an agronomic best-to-worst ranking.
+This mode needs at least one named, referenced starting crop and a reference for every named starting crop. An unknown season can remain alongside known crops. A fully unknown plan or an unreferenced system receives `insufficient_evidence`, not an automatic replacement with annual crops. Mixed referenced crops can explore single-crop ideas, but this does not validate the mixture or advise removing it.
 
-The default configuration returns no alternatives and two explained unfilled slots. Agricultural rules, calibration and local review remain substantive work before a competition demonstration can claim supported rotation advice. The environmental explorer and PDF export work independently of that gap.
+If too few crop combinations remain, show fewer options and explain the empty slots. No yield, income, water saving, soil benefit, confidence percentage or agronomic ranking is calculated. Water supply and priority identify missing evidence; they do not silently alter temperature observations.
 
-Synthetic reviewed rules occur only in tests to exercise the engine. They are not production data or agricultural recommendations.
+## Reviewed agricultural rules remain separate
+
+`review_status` is still `pending` and `rules` is empty. Both the set and an individual rule must be `reviewed` before reviewed agricultural rules run. Never change those labels just to unlock alternatives.
+
+Supported kinds remain `minimum_crop_break` (parameter `min_break_seasons`), `soil_ph_range` (`minimum`, `maximum`) and `requires_irrigation`. Each needs an ID, criterion, description, crops, source URL and applicability. Synthetic reviewed rules in tests are not production advice. When reviewed rules are configured, a provisional alternative requires a passed reviewed rule, not merely a passed reference check.
+
+Set `reference_checks` to `[]` to disable exploratory reference options. Restart the backend after configuration changes: rules are loaded at startup. The rule version combines its declared version and file hash; crop/environment bytes are covered by the data version. Changes therefore produce a different assessment fingerprint.
+
+## Test it
+
+Use `examples/rotation.json`: it should return the original maize plan and two `reference_only` options. Add pH 4.2: only beans matches that broad pH range, so there are not enough species for diverse options. Add coffee or banana to a planned season: the baseline stays recorded and automatic replacements are withheld. These outcomes demonstrate honest file-based screening, not expert validation.

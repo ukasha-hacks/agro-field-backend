@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-APP_VERSION = "0.1.0"
-METHODS_VERSION = "1.0.0"
+APP_VERSION = "0.2.0"
+METHODS_VERSION = "1.1.0"
 
 
 @dataclass(frozen=True)
