@@ -19,10 +19,10 @@ The included `data/Field_Shift_Relevant_Data/` folder contains the local inputs 
 
 ## Current stage
 
-Stages 1-3 are available on main. The latest cumulative implementation is on [stage/04-rotation-comparison](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/04-rotation-comparison), containing local data, historical exploration, PDF export and evidence-aware rotation comparison, with 36 passing tests. Earlier stage branches remain available. To get the complete implementation:
+Stages 1-3 are available on main. The latest cumulative implementation is on [stage/05-readable-pdf](https://github.com/ukasha-hacks/agro-field-backend/tree/stage/05-readable-pdf), containing local data, historical exploration, evidence-aware rotation comparison and readable DM Sans PDF reports, with 37 passing tests. Earlier stage branches remain available. To get the complete implementation:
 
 ```bash
-git clone --branch stage/04-rotation-comparison https://github.com/ukasha-hacks/agro-field-backend.git
+git clone --branch stage/05-readable-pdf https://github.com/ukasha-hacks/agro-field-backend.git
 cd agro-field-backend
 ```
 
@@ -53,11 +53,13 @@ curl -X POST http://127.0.0.1:8000/api/v1/exports/pdf \
   --output agro-field-report.pdf
 ```
 
-The report recomputes through the same exploration service. It includes statistics, charts, descriptions, source records, limitations and the supplied static map reference. It never downloads map tiles, images or fonts. Invalid export requests return JSON errors, not a PDF.
+The report recomputes through the same exploration service. It includes statistics, charts, descriptions, source records, limitations and the supplied static map reference. DM Sans regular and bold are bundled and embedded, including chart labels. Tables use plain wetness units, readable dates and daily coverage. The font license and source are in [assets/fonts/dm-sans](assets/fonts/dm-sans/README.md). Export never downloads map tiles, images or fonts. Invalid export requests return JSON errors, not a PDF.
 
 The map preview labels all four locations; the report identifies the chosen location in text. It is not an animated weather map or a newly highlighted district. When the optional image is absent, export still works with coordinates and an explicit note.
 
 A generated [Gulu 2024 sample report](examples/gulu-2024-report.pdf) is included for review.
+
+For the request flow, formulas, worked examples, rule checks and presentation questions, read [Understanding the backend](docs/BACKEND_GUIDE.md).
 
 ## Compare rotations
 
