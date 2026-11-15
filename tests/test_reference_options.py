@@ -28,6 +28,7 @@ def test_ph_ranges_are_read_from_the_local_catalog(client):
 def test_species_ph_boundaries_and_missing_values(client, ph, expected):
     body = rotation_body()
     body["soil"]["ph"] = ph
+    body["soil"]["use_area_estimate"] = False
     result = compare(client, body)
     assert next(c.status for c in result.baseline.checks if c.criterion == "maize_soil_ph") == expected
 
@@ -54,7 +55,7 @@ def test_supported_mixture_can_explore_but_is_not_declared_valid(client):
     assert all(any("not advice to replace" in text for text in option.tradeoffs) for option in result.alternatives)
 
 
-@pytest.mark.parametrize("crop", ["coffee", "banana", "cassava", "unknown"])
+@pytest.mark.parametrize("crop", ["coffee", "unreferenced-banana", "cassava", "unknown"])
 def test_unreferenced_or_entirely_unknown_systems_are_not_replaced(client, crop):
     body = rotation_body()
     for season in body["baseline_sequence"]:
@@ -88,7 +89,9 @@ def test_missing_temperature_is_not_silently_averaged(client):
     store.daily = store.daily.copy()
     selected = (store.daily.sample_id == "northern_gulu") & (store.daily.date.dt.year == 2024)
     store.daily.loc[store.daily.index[selected][0], "temperature_mean_c"] = float("nan")
-    result = compare_rotations(store, RotationRequest(**rotation_body()))
+    body = rotation_body()
+    body["soil"]["use_area_estimate"] = False
+    result = compare_rotations(store, RotationRequest(**body))
     assert result.alternatives == []  # pH and dates also missing, so no positive range evidence.
     assert next(c.status for c in result.baseline.checks if c.criterion == "maize_historical_temperature") == "unknown"
 

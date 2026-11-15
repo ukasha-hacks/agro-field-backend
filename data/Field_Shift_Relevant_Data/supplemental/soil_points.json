@@ -1,0 +1,58 @@
+{
+  "central_masaka": {
+    "ph": 5.5,
+    "depth_cm": [
+      0,
+      20
+    ],
+    "mapping_unit_id": 27533,
+    "latitude": -0.337,
+    "longitude": 31.737,
+    "component_share_percent": 65,
+    "source_url": "https://www.fao.org/land-water/resources/tools/databases/hwsd/en",
+    "resolution": "30 arc-seconds, approximately 1 km",
+    "method": "HWSD v2.0 dominant soil-map component, topsoil pH in water; sample-area estimate, not a farm measurement"
+  },
+  "eastern_mbale": {
+    "ph": 6.7,
+    "depth_cm": [
+      0,
+      20
+    ],
+    "mapping_unit_id": 27569,
+    "latitude": 1.08,
+    "longitude": 34.175,
+    "component_share_percent": 34,
+    "source_url": "https://www.fao.org/land-water/resources/tools/databases/hwsd/en",
+    "resolution": "30 arc-seconds, approximately 1 km",
+    "method": "HWSD v2.0 dominant soil-map component, topsoil pH in water; sample-area estimate, not a farm measurement"
+  },
+  "northern_gulu": {
+    "ph": 5.1,
+    "depth_cm": [
+      0,
+      20
+    ],
+    "mapping_unit_id": 27473,
+    "latitude": 2.774,
+    "longitude": 32.299,
+    "component_share_percent": 40,
+    "source_url": "https://www.fao.org/land-water/resources/tools/databases/hwsd/en",
+    "resolution": "30 arc-seconds, approximately 1 km",
+    "method": "HWSD v2.0 dominant soil-map component, topsoil pH in water; sample-area estimate, not a farm measurement"
+  },
+  "western_mbarara": {
+    "ph": 5.1,
+    "depth_cm": [
+      0,
+      20
+    ],
+    "mapping_unit_id": 27475,
+    "latitude": -0.607,
+    "longitude": 30.655,
+    "component_share_percent": 65,
+    "source_url": "https://www.fao.org/land-water/resources/tools/databases/hwsd/en",
+    "resolution": "30 arc-seconds, approximately 1 km",
+    "method": "HWSD v2.0 dominant soil-map component, topsoil pH in water; sample-area estimate, not a farm measurement"
+  }
+}

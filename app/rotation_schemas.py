@@ -43,6 +43,7 @@ class SoilInput(Model):
     ph: float | None = Field(default=None, ge=0, le=14)
     texture: str | None = Field(default=None, max_length=100)
     organic_carbon_percent: float | None = Field(default=None, ge=0, le=100)
+    use_area_estimate: bool = True
 
 
 class RotationRequest(Model):
@@ -125,6 +126,7 @@ class CriterionCheck(Model):
     reason: str
     rule_id: str | None = None
     source_url: str | None = None
+    gap_type: Literal["farmer_input", "missing_reference", "local_review", "missing_observation"] | None = None
 
 
 class Strategy(Model):
@@ -136,11 +138,20 @@ class Strategy(Model):
     potential_benefits: list[str] | None = None
     tradeoffs: list[str] | None = None
     local_review_required: bool = True
+    summary: str | None = None
+    next_step: str | None = None
 
 
 class AlternativeSlot(Model):
     strategy_id: str
     reason: str
+
+
+class RotationConclusion(Model):
+    title: str
+    detail: str
+    tone: Literal["attention", "review", "complete"]
+    next_steps: list[str] = Field(max_length=3)
 
 
 class RotationResponse(Model):
@@ -157,6 +168,7 @@ class RotationResponse(Model):
     sources: list[Source]
     warnings: list[Warning]
     candidate_counts: dict[str, int]
+    conclusion: RotationConclusion
     selection_method: str = "constraint_checks_then_explicit_crop_preferences; no agronomic overall score"
 
 

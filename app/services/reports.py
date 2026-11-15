@@ -211,8 +211,12 @@ def add_rotation(story, rotation, styles):
     status = rotation.status.replace("_", " ")
     priority = rotation.priority.replace("_", " ")
     story.append(paragraph(f"Assessment status: {status}. Priority: {priority}.", styles["BodyText"]))
+    story.append(paragraph(rotation.conclusion.title, styles["Heading3"]))
+    story.append(paragraph(rotation.conclusion.detail, styles["BodyText"]))
+    for step in rotation.conclusion.next_steps:
+        story.append(paragraph(step, styles["BodyText"]))
     if rotation.status == "reference_only":
-        story.append(paragraph("Reference-based options for local review, not validated rotation recommendations. Only the supplied local files were used.", styles["BodyText"]))
+        story.append(paragraph("Reference-based assessment for local review, not a validated rotation recommendation. Only downloaded local files were used.", styles["BodyText"]))
     for strategy in [rotation.baseline, *rotation.alternatives]:
         story.append(paragraph(strategy.strategy_id.replace("_", " ").title(), styles["Heading3"]))
         sequence = [" + ".join(season.crops) or "Fallow" for season in strategy.sequence]

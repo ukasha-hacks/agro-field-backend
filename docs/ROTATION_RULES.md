@@ -1,3 +1,5 @@
+> Stage 7 update: the supplementary local files extend the catalog to ten crop choices and add explicit HWSD area-pH estimates. Original files remain unchanged. `reference_rule_coverage` now checks whether configured references cover every crop, separately from `succession_evidence`, which remains unvalidated. Missing farm answers, missing sources, missing observations and local-review gaps have different labels. See [DATA_SOURCES.md](DATA_SOURCES.md) for downloaded files and extraction details.
+
 # Local reference checks and rotation evidence
 
 The default configuration now enables reference-based options. It reads only the supplied local files. It does not fetch source URLs and does not mark the agricultural rules as reviewed.
@@ -8,7 +10,7 @@ The default configuration now enables reference-based options. It reads only the
 - `data/Field_Shift_Relevant_Data/inputs/crops/crop_reference_requirements.csv`: broad ECOCROP species ranges and original source URLs for maize, beans, groundnut and sorghum.
 - `data/Field_Shift_Relevant_Data/inputs/environment/daily_environment_2016_2025.csv`: the selected sample point's historical daily mean temperature, delivered through NASA POWER.
 
-All thresholds come directly from those existing crop records. The original download and checksum manifest are unchanged. Coffee, banana, cassava and other crops have no reference here; no outside information is added to fill those gaps.
+All thresholds come directly from those existing crop records. The original download and checksum manifest are unchanged. Supplementary FAO sheets now add coffee, banana, sugarcane, vanilla and cotton. Cassava still has no supplied reference.
 
 ## Checks and formulas
 
@@ -31,7 +33,7 @@ The historical temperature check passes only a comparison of a past-period mean 
 5. Show up to two different crop combinations, each containing at least two species. Different permutations of the same crop set do not fill two cards. A repeated crop is not universally banned; no unsourced crop-break interval is introduced.
 6. Label the result `reference_only`, with unknown feasibility and local review required. Explain passed checks, tradeoffs and all unresolved information.
 
-This mode needs at least one named, referenced starting crop and a reference for every named starting crop. An unknown season can remain alongside known crops. A fully unknown plan or an unreferenced system receives `insufficient_evidence`, not an automatic replacement with annual crops. Mixed referenced crops can explore single-crop ideas, but this does not validate the mixture or advise removing it.
+This mode needs at least one named, referenced starting crop and a reference for every named starting crop. An unknown season can remain alongside known crops. Perennial references can pass species checks but cannot unlock annual replacement sequences. A fully unknown plan or an unreferenced system receives `insufficient_evidence`, not an automatic replacement with annual crops. Mixed referenced crops can explore single-crop ideas, but this does not validate the mixture or advise removing it.
 
 If too few crop combinations remain, show fewer options and explain the empty slots. No yield, income, water saving, soil benefit, confidence percentage or agronomic ranking is calculated. Water supply and priority identify missing evidence; they do not silently alter temperature observations.
 

@@ -6,3 +6,5 @@ __pycache__/
 reports/
 *.egg-info/
 .ruff_cache/
+# Global source archives used only during preparation.
+data/.download-cache/

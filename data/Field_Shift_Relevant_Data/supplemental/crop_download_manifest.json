@@ -1,0 +1,44 @@
+{
+  "retrieved_at_utc": "2026-11-15T12:47:51.301565+00:00",
+  "allowed_resource": "FAO GAEZ",
+  "catalogue_url": "https://gaez.fao.org/pages/ecocrop-find-plant",
+  "integration_reference": "https://www.fao.org/land-water/resources/tools/databases/ecocrop/en",
+  "sources": [
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=749",
+      "local_file": "fao_crop_sheets/749.html",
+      "sha256": "48103d57e8b1fa1e01695f0176c67f63dc987eca68f6a747e4d5574031fa8fcf"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=750",
+      "local_file": "fao_crop_sheets/750.html",
+      "sha256": "5948bfc2eb61fff9272860f472f86060acca2ed338e2e4b65ae38c40f7f8d6d0"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=7848",
+      "local_file": "fao_crop_sheets/7848.html",
+      "sha256": "55755752af01e85f8e2d7d98c4df3f21c89d1abe1f4f2632a6581da9eb3097d0"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/cropView?id=1884",
+      "local_file": "fao_crop_sheets/1884_crop_view.html",
+      "sha256": "902209ce55e47f78af6b027b3e1438fe7e6e5510afdb448522ae8568622ce098"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1884",
+      "local_file": "fao_crop_sheets/1884.html",
+      "sha256": "6668017598966fa424bd33c12dd9436f03d528523293fbfb1ee9685eb8993d35"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=2131",
+      "local_file": "fao_crop_sheets/2131.html",
+      "sha256": "220dc7d5b88e9fd0c4d01a97eddcf1c828e6c597e7b2f81a2e038707c430f200"
+    },
+    {
+      "url": "https://ecocrop.apps.fao.org/ecocrop/srv/en/dataSheet?id=1160",
+      "local_file": "fao_crop_sheets/1160.html",
+      "sha256": "f953ade5219880f9aa423e001764a44c804bf1aaf0d56a1a66c4fdeed4beb78a"
+    }
+  ],
+  "limitations": "Species references only. Perennials are not generated as seasonal replacement crops. Banana reference is Musa acuminata, not all banana varieties."
+}

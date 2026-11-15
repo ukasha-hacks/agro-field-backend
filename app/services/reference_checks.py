@@ -13,6 +13,7 @@ def reference_check(crop, kind, status, reason):
     return CriterionCheck(
         criterion=f"{crop.crop_id}_{kind}", status=status, reason=reason,
         rule_id=f"reference:{crop.crop_id}:{kind}", source_url=crop.source_url,
+        gap_type=("farmer_input" if kind in {"soil_ph", "minimum_cycle_days"} else "missing_observation") if status == "unknown" else None,
     )
 
 
@@ -27,13 +28,29 @@ def assess_references(store, request, sequence, mean_temperature):
         if "soil_ph" in enabled:
             low, high = crop.soil_ph_absolute_min, crop.soil_ph_absolute_max
             ph = request.soil.ph
+            area_soil = store.location(request.exploration.location_id).soil_reference
+            estimated = ph is None and request.soil.use_area_estimate and area_soil is not None
+            if estimated:
+                ph = area_soil.ph
             status = "unknown"
             if ph is not None:
                 status = "pass" if low <= ph <= high else "fail"
+                if estimated and status == "fail":
+                    status = "unknown"
             reason = f"{name}: the saved species pH range is {low:g}-{high:g}. "
             reason += "Add a measured soil pH to compare it." if ph is None else f"Your supplied pH is {ph:g}. This is a broad reference check."
+            if estimated:
+                reason = f"{name}: the HWSD area estimate is pH {ph:g} (0-20 cm); the saved species range is {low:g}-{high:g}. This is a mapped soil estimate, not a farm test."
+                if status == "unknown":
+                    reason += " Measure farm pH before ruling this crop out."
             checks.append(reference_check(crop, "soil_ph", status, reason))
         if "minimum_cycle_days" in enabled:
+            if not crop.rotation_candidate:
+                item = reference_check(crop, "minimum_cycle_days", "unknown",
+                    f"{name} is perennial. Its published cycle is not a planting-to-first-harvest or replanting schedule; a perennial management plan is needed.")
+                item.gap_type = "local_review"
+                checks.append(item)
+        if "minimum_cycle_days" in enabled and crop.rotation_candidate:
             seasons = [season for season in sequence if crop.crop_id in season.crops]
             lengths = [
                 (season.harvest_date - season.planting_date).days + 1
@@ -61,12 +78,15 @@ def assess_references(store, request, sequence, mean_temperature):
                 reason += f"The selected past period averaged {mean_temperature:.2f} °C. "
                 reason += "That mean is within the range." if within else "That mean is outside the range; seasonal review is needed."
             reason += " This does not test heat extremes, crop stages or future growing conditions."
-            checks.append(reference_check(crop, "historical_temperature", status, reason))
+            item = reference_check(crop, "historical_temperature", status, reason)
+            if status == "unknown" and mean_temperature is not None:
+                item.gap_type = "local_review"
+            checks.append(item)
     return checks
 
 
 def can_explore_references(store, request):
-    known = {crop.crop_id for crop in store.crops}
+    known = {crop.crop_id for crop in store.crops if crop.rotation_candidate}
     recorded = {crop for season in request.baseline_sequence for crop in season.crops} - {"unknown"}
     # Do not silently replace an unreferenced crop or perennial system with annual crops.
     return bool(store.rules.reference_checks and recorded and recorded <= known)
@@ -103,6 +123,13 @@ def choose_reference_options(candidates, request, mean_temperature):
             "Single-crop seasons only; this is not advice to replace an existing crop mixture.",
             "Confirm succession, local variety, planting windows and water needs with a local adviser.",
         ]
+        ph_checks = [item for item in candidate.checks if item.criterion.endswith("_soil_ph")]
+        both_passed = len(temperature_checks) == len(combination) and len(ph_checks) == len(combination) and all(item.status == "pass" for item in ph_checks)
+        candidate.summary = "Some broad crop-range checks passed; open the checks for the limits."
+        if both_passed:
+            ph_source = "Supplied pH" if request.soil.ph is not None else "Area-estimated pH"
+            candidate.summary = f"{ph_source} and past temperature fit these crops' broad ranges."
+        candidate.next_step = "Confirm planting dates, crop order and water needs."
         options.append(candidate)
         if len(options) == 2:
             break

@@ -6,7 +6,7 @@ def test_catalog_uses_local_data(client):
     gulu = next(item for item in points["features"] if item["properties"]["location_id"] == "northern_gulu")
     assert gulu["geometry"]["coordinates"] == [32.299, 2.774]
     crops = client.get("/api/v1/crops").json()["items"]
-    assert len(crops) == 4
+    assert len(crops) == 10
     assert all(item["local_variety_validated"] is False for item in crops)
 
 
